@@ -1,0 +1,38 @@
+#editor {
+    display: grid;
+    grid-template-columns: 1fr 40rem;
+    grid-template-rows: auto 1fr;
+}
+
+/* Action bar */
+
+#action-bar {
+    grid-column: span 2;
+    background-color: var(--bg-100);
+    
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    
+    padding: 12px;
+    margin-bottom: 1px;
+}
+
+#action-bar button {
+    padding: 8px;
+    background-color: white;
+    border: 1px solid black;
+}
+
+/* Main panel */
+
+#main-panel {
+    background-color: var(--bg-200);
+    box-shadow: inset -5px 5px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Side panel */
+
+#side-panel {
+    background-color: var(--bg-100);
+}

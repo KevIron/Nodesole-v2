@@ -1,0 +1,45 @@
+.viewport {
+    display: grid;
+    grid-template-areas: "stack";
+
+    width: 100%;
+    height: 100%;
+
+    overflow: hidden;
+
+    .nodes-container,
+    .connections-container,
+    .viewport-workspace {
+        pointer-events: none;
+        grid-area: stack;
+    }
+
+    .nodes-container {
+        z-index: 2;
+    }
+
+    .connections-container {
+        z-index: 1;
+    }
+
+    .grid-container {
+        z-index: 0;
+        grid-area: stack;
+
+        width: 100%;
+        height: 100%;
+
+        position: relative;
+    }
+
+    .grid-container canvas {
+        display: block;
+        position: absolute;
+
+        width: 100%;
+        height: 100%;
+
+        top: 0;
+        left: 0;
+    }
+}

@@ -1,0 +1,26 @@
+:root {
+    --bg-100: #ffffff;
+    --bg-200: #f7f7f7;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 62.5%;
+}
+
+body {
+    height: 100vh;
+    font-size: 1.6rem;
+
+    background-color: var(--bg-200);
+}
+
+body, #root {
+    display: grid;
+    grid-template-rows: 1fr;
+}
