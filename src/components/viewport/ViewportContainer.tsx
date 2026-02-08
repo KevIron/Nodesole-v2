@@ -18,7 +18,7 @@ export default function ViewportContainer({ children, ...props }: React.Componen
     const containerRelativePos = pos.subtract(viewportContainerPos);
     const viewportRelativePos = containerRelativePos.subtract(viewportParams.offset);
 
-    return viewportRelativePos;
+    return viewportRelativePos.divideAll(viewportParams.scaleFactor).roundAll(4);
   }
 
   function updateViewportOffset(newOffset: Vec2) {
@@ -28,10 +28,18 @@ export default function ViewportContainer({ children, ...props }: React.Componen
     }));
   } 
 
+  function updateScaleFactor(newFactor: number) {
+    setViewportParams(prev => ({
+      ...prev,
+      scaleFactor: newFactor
+    }));
+  }
+
   const viewportContextValue = {
     viewportParams: viewportParams,
     convertToViewportPos: convertToViewportPos,
-    updateViewportOffset: updateViewportOffset
+    updateViewportOffset: updateViewportOffset,
+    updateScaleFactor: updateScaleFactor
   };
 
   return (

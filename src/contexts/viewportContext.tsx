@@ -9,7 +9,8 @@ export type ViewportParams = {
 export type ViewportContext = {
   viewportParams: ViewportParams,
   convertToViewportPos: (pos: Vec2) => Vec2,
-  updateViewportOffset: (offset: Vec2) => void
+  updateViewportOffset: (offset: Vec2) => void,
+  updateScaleFactor: (factor: number) => void
 }
 
 export const ViewportContext = createContext<ViewportContext>({
@@ -18,5 +19,6 @@ export const ViewportContext = createContext<ViewportContext>({
     scaleFactor: 0
   },
   convertToViewportPos: () => { throw new Error("Method not implemented!"); },
-  updateViewportOffset: () => { throw new Error("Method not implemented!"); }
+  updateViewportOffset: () => { throw new Error("Method not implemented!"); },
+  updateScaleFactor: () => { throw new Error("Method not implemented!"); }
 });

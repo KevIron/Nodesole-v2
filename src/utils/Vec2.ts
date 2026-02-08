@@ -31,6 +31,22 @@ export default class Vec2 {
     return absoluteDistance;
   }
 
+  public divideAll(factor: number) {
+    return new Vec2(
+      this._x / factor,
+      this._y / factor
+    );
+  }
+
+  public roundAll(decimals: number) {
+    const decimalPow = Math.pow(10, decimals);
+
+    return new Vec2(
+      Math.round(this._x * decimalPow) / decimalPow,
+      Math.round(this._y * decimalPow) / decimalPow
+    );
+  }
+
   public get x() {
     return this._x;
   }

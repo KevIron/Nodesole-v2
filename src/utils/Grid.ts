@@ -1,4 +1,4 @@
-import type { ViewportParams } from "../components/Viewport";
+import type { ViewportParams } from "../contexts/viewportContext";
 import type { Dimensions } from "./Elements";
 import Vec2 from "./Vec2";
 
@@ -11,8 +11,8 @@ export function drawGrid(context: CanvasRenderingContext2D, dimensions: Dimensio
   const spacing = Math.ceil(options.spacing * viewportParams.scaleFactor);
 
   const drawingOffset = new Vec2(
-    (viewportParams.offset.x % spacing) * viewportParams.scaleFactor,
-    (viewportParams.offset.y % spacing) * viewportParams.scaleFactor
+    (viewportParams.offset.x % spacing),
+    (viewportParams.offset.y % spacing)
   );
 
   context.clearRect(0, 0, dimensions.width, dimensions.height);
