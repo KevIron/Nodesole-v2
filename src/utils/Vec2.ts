@@ -9,8 +9,8 @@ export default class Vec2 {
 
   public subtract(vec: Vec2) {
     return new Vec2(
-      vec.x - this._x,
-      vec.y - this._y
+      this._x - vec.x,
+      this._y - vec.y 
     );
   }
   

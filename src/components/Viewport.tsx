@@ -1,79 +1,103 @@
-import { useEffect, useRef, useState } from "react";
-import ViewportGrid from "./ViewportGrid";
-import Vec2 from "../utils/Vec2";
+// import { useEffect, useRef, useState } from "react";
+// import ViewportGrid from "./ViewportGrid";
+// import Vec2 from "../utils/Vec2";
+// import EntryNode from "./nodes/EntryNode";
+// import { ViewportContext } from "../contexts/viewportContext";
 
-export type ViewportParams = {
-  offset: Vec2,
-  scaleFactor: number
-}
+// export type ViewportParams = {
+//   offset: Vec2,
+//   scaleFactor: number
+// }
 
-function createViewportTransform(params: ViewportParams) {
-  const translate = `translate(${params.offset.x}px, ${params.offset.y}px)`;
-  const scale = `scale(${params.scaleFactor})`;
+// function createViewportTransform(params: ViewportParams) {
+//   const translate = `translate(${params.offset.x}px, ${params.offset.y}px)`;
+//   const scale = `scale(${params.scaleFactor})`;
 
-  return `${translate} ${scale}`;
-}
+//   return `${translate} ${scale}`;
+// }
 
-export default function Viewport() {
-  const [viewportParams, setViewportParams] = useState<ViewportParams>({
-    offset: new Vec2(0, 0),
-    scaleFactor: 1
-  });
+// export default function Viewport() {
+//   const [viewportParams, setViewportParams] = useState<ViewportParams>({
+//     offset: new Vec2(0, 0),
+//     scaleFactor: 1
+//   });
 
-  const dragStartPos = useRef<Vec2 | null>(null);
-  const dragStartOffset = useRef<Vec2 | null>(null);
+//   const currentOffset = useRef<Vec2 | null>(null);
+//   const dragStartPos = useRef<Vec2 | null>(null);
+//   const dragStartOffset = useRef<Vec2 | null>(null);
 
-  const viewportTransform = createViewportTransform(viewportParams);
+//   const viewportRef = useRef<HTMLDivElement | null>(null);
 
-  useEffect(() => {
-    function handleViewportClick(e: MouseEvent) {
-      dragStartPos.current = new Vec2(e.clientX, e.clientY);
-      dragStartOffset.current = viewportParams.offset;
-    }
+//   useEffect(() => {
+//     currentOffset.current = viewportParams.offset
+//   }, [viewportParams.offset]);
 
-    function handleViewportRelease() {
-      if (!dragStartPos.current || !dragStartOffset.current) return;
+//   useEffect(() => {
+//     function handleViewportClick(e: MouseEvent) {
+//       const clickedElement = e.target as HTMLElement;
+//       if (clickedElement.tagName !== "CANVAS") return;
 
-      dragStartPos.current = null;
-      dragStartOffset.current = null;
-    }
+//       dragStartPos.current = new Vec2(e.clientX, e.clientY);
+//       dragStartOffset.current = currentOffset.current;
+//     }
 
-    function handleViewportDrag(e: MouseEvent) {
-      if (!dragStartPos.current || !dragStartOffset.current) return;
+//     function handleViewportRelease() {
+//       if (!dragStartPos.current) return;
+//       dragStartPos.current = null;
+//     }
 
-      const currentPos = new Vec2(e.clientX, e.clientY);
-      const distance = dragStartOffset.current.add(dragStartPos.current.subtract(currentPos));
+//     document.addEventListener("mousedown", handleViewportClick);
+//     document.addEventListener("mouseup", handleViewportRelease);
 
-      setViewportParams(prev => ({
-        ...prev,
-        offset: distance
-      }));
-    }
+//     return () => { 
+//       document.removeEventListener("mousedown", handleViewportClick);
+//       document.removeEventListener("mouseup", handleViewportRelease);
+//     }
+//   }, []);
 
-    document.addEventListener("mousedown", handleViewportClick);
-    document.addEventListener("mouseup", handleViewportRelease);
-    document.addEventListener("mousemove", handleViewportDrag); 
+//   useThrottledWindowEvent("mousemove", (e) => {
+//     if (!dragStartPos.current || !dragStartOffset.current) return;
 
-    return () => { 
-      document.removeEventListener("mousedown", handleViewportClick);
-      document.removeEventListener("mouseup", handleViewportRelease);
-      document.removeEventListener("mousemove", handleViewportDrag); 
-    }
-    
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+//     const currentPos = new Vec2(e.clientX, e.clientY);
+//     const distance =  dragStartOffset.current.add(currentPos.subtract(dragStartPos.current));
 
-  return (
-    <div className="viewport">
-      <div className="viewport-workspace" style={{ transform: viewportTransform }}>
-        <div className="nodes-container"></div>
-        <div className="connections-container"></div>
-      </div>
-      <ViewportGrid 
-        spacing={16} 
-        viewportParams={viewportParams}
-        lineColor="#575757ff"
-      />
-    </div>
-  );
-}
+//     setViewportParams(prev => ({
+//       ...prev,
+//       offset: distance
+//     }));
+//   });
+
+//   function convertToViewportPos(pos: Vec2) {
+//     if (!viewportRef.current) throw new Error("Viewport not found!");
+
+//     const viewportContainerRect = viewportRef.current.getBoundingClientRect();
+//     const viewportContainerPos = new Vec2(viewportContainerRect.x, viewportContainerRect.y);
+
+//     const containerRelativePos = pos.subtract(viewportContainerPos);
+//     const viewportRelativePos = containerRelativePos.subtract(viewportParams.offset);
+
+//     return viewportRelativePos;
+//   }
+
+//   const viewportTransform = createViewportTransform(viewportParams);
+
+//   return (
+//     <ViewportContext value={{ viewportParams, convertToViewportPos }}>
+//       <div className="viewport" ref={viewportRef}>
+//         <ViewportGrid
+//           viewportParams={viewportParams} 
+//           gridOptions={{
+//             spacing: 16,
+//             lineColor: "black"
+//           }}        
+//         />
+//         <div className="viewport-workspace" style={{ transform: viewportTransform }}>
+//           <div className="nodes-container">
+//             <EntryNode />
+//           </div>
+//           <div className="connections-container"></div>
+//         </div>
+//       </div>
+//     </ViewportContext>
+//   );
+// }

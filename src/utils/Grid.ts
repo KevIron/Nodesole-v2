@@ -2,11 +2,13 @@ import type { ViewportParams } from "../components/Viewport";
 import type { Dimensions } from "./Elements";
 import Vec2 from "./Vec2";
 
-export function drawGrid(context: CanvasRenderingContext2D, dimensions: Dimensions, spacing: number, lineColor: string, viewportParams: ViewportParams) {
-  spacing = Math.ceil(spacing * viewportParams.scaleFactor);
+export type GridOptions = {
+  spacing: number,
+  lineColor: string,
+}
 
-  const numOfHorizontalLines = Math.ceil(dimensions.height / spacing);
-  const numOfVerticalLines = Math.ceil(dimensions.width / spacing)
+export function drawGrid(context: CanvasRenderingContext2D, dimensions: Dimensions, viewportParams: ViewportParams, options: GridOptions) {
+  const spacing = Math.ceil(options.spacing * viewportParams.scaleFactor);
 
   const drawingOffset = new Vec2(
     (viewportParams.offset.x % spacing) * viewportParams.scaleFactor,
@@ -14,23 +16,22 @@ export function drawGrid(context: CanvasRenderingContext2D, dimensions: Dimensio
   );
 
   context.clearRect(0, 0, dimensions.width, dimensions.height);
-  context.strokeStyle = lineColor;
+  context.strokeStyle = options.lineColor;
 
-  for (let i = 0; i < numOfHorizontalLines; ++i) {
-    const pos = i * spacing;
+  const correctionOffset = 0.5;
 
+  for (let i = drawingOffset.x; i < dimensions.width; i += spacing) {
     context.beginPath();
-    context.moveTo(0, pos + 0.5 + drawingOffset.y);
-    context.lineTo(dimensions.width, pos + 0.5 + drawingOffset.y);
+    context.moveTo(i + correctionOffset, 0);
+    context.lineTo(i + correctionOffset, dimensions.height);
     context.stroke();
+
   }
 
-  for (let i = 0; i < numOfVerticalLines; ++i) {
-    const pos = i * spacing;
-
+  for (let i = drawingOffset.y; i < dimensions.height; i += spacing) {
     context.beginPath();
-    context.moveTo(pos + 0.5 + drawingOffset.x, 0);
-    context.lineTo(pos + 0.5 + drawingOffset.x, dimensions.height);
+    context.moveTo(0, i + correctionOffset);
+    context.lineTo(dimensions.width, i + correctionOffset);
     context.stroke();
   }
 }

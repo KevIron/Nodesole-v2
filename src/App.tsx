@@ -1,8 +1,9 @@
-import Viewport from "./components/Viewport";
+import Viewport from "./components/viewport/Viewport";
 
 import "./styles/index.css";
 import "./styles/editor.css";
 import "./styles/viewport.css";
+import "./styles/nodes.css";
 
 export default function App() {
   return (
