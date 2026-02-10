@@ -1,8 +1,10 @@
 import { useRef } from "react";
-import type { ViewportParams } from "../../contexts/ViewportContext";
+import { useAnimationTask } from "../../hooks/useAnimationTask";
+
 import EntryNode from "../nodes/EntryNode";
 import useViewportContext from "../../hooks/useViewportContext";
-import { useAnimationTask } from "../../hooks/useAnimationTask";
+
+import type { ViewportParams } from "../../contexts/ViewportContext";
 
 function createViewportTransform(params: ViewportParams) {
   const translate = `translate(${params.offset.x}px, ${params.offset.y}px)`;

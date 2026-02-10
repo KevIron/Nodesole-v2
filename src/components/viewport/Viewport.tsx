@@ -6,7 +6,6 @@ import Vec2 from "../../utils/Vec2";
 
 import { ViewportContext, type ViewportParams } from "../../contexts/ViewportContext";
 
-
 export default function Viewport() {
   const viewportRef = useRef<HTMLDivElement | null>(null);
   const viewportParamsRef = useRef<ViewportParams>({
