@@ -13,12 +13,11 @@ function createViewportTransform(params: ViewportParams) {
   return `${translate} ${scale}`;
 }
 
-
 export default function Workspace() {
   const workspaceRef = useRef<HTMLDivElement | null>(null);
   const { getViewportParams } = useViewportContext();
 
-  function updateViewportTransform() {
+  function updateWorkspaceTransform() {
     if (!workspaceRef.current) return;
 
     const viewportParams = getViewportParams();
@@ -27,14 +26,11 @@ export default function Workspace() {
     workspaceRef.current.style.transform = viewportTransform;
   }
   
-  useAnimationTask(updateViewportTransform);
+  useAnimationTask(updateWorkspaceTransform);
 
   return (
     <div className="viewport-workspace" ref={workspaceRef}>
-      <div className="nodes-container">
-        <EntryNode />
-      </div>
-      <div className="connections-container"></div>
+      <EntryNode />
     </div>
   )
 }

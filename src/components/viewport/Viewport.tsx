@@ -1,8 +1,9 @@
 import { useRef } from "react";
 
+import Vec2 from "../../utils/Vec2";
 import Grid from "./Grid";
 import Workspace from "./Workspace";
-import Vec2 from "../../utils/Vec2";
+import Connections from "./Connections";
 
 import { ViewportContext, type ViewportParams } from "../../contexts/ViewportContext";
 
@@ -67,6 +68,7 @@ export default function Viewport() {
     <ViewportContext value={viewportAPI}>
       <div className="viewport" ref={viewportRef}>
         <Grid gridOptions={gridOptions} />
+        <Connections />
         <Workspace />
       </div>
     </ViewportContext>

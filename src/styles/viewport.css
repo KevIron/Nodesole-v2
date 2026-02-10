@@ -7,34 +7,38 @@
 
     overflow: hidden;
 
-    .nodes-container,
     .connections-container,
     .viewport-workspace {
         pointer-events: none;
         grid-area: stack;
     }
 
+    .grid-container,
+    .connections-container {
+        position: relative;
+    }
+
     .viewport-workspace {
         transform-origin: top left;
-    }
-
-    .nodes-container {
-        z-index: 2;
-    }
-
-    .connections-container {
-        z-index: 1;
     }
 
     .grid-container {
         z-index: 0;
         grid-area: stack;
-
-        position: relative;
     }
 
     .grid-container canvas {
         display: block;
+        position: absolute;
+
+        width: 100%;
+        height: 100%;
+
+        top: 0;
+        left: 0;
+    }
+
+    .connections-container svg {
         position: absolute;
 
         width: 100%;
