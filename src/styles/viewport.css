@@ -14,6 +14,10 @@
         grid-area: stack;
     }
 
+    .viewport-workspace {
+        transform-origin: top left;
+    }
+
     .nodes-container {
         z-index: 2;
     }
@@ -25,9 +29,6 @@
     .grid-container {
         z-index: 0;
         grid-area: stack;
-
-        width: 100%;
-        height: 100%;
 
         position: relative;
     }

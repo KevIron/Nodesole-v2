@@ -7,22 +7,21 @@ export type ViewportParams = {
 }
 
 export type ViewportContext = {
-  viewportParams: ViewportParams,
-  convertToViewportPos: (pos: Vec2, params?: ViewportParams) => Vec2,
+  getViewportParams: () => ViewportParams
+  convertToViewportPos: (pos: Vec2) => Vec2,
+  convertToContainerPos: (pos: Vec2) => Vec2,
+
   updateViewportOffset: (offset: Vec2) => void,
   updateScaleFactor: (factor: number) => void
-
-  setViewportParams: React.Dispatch<React.SetStateAction<ViewportParams>>
+  updateViewportParams: (params: ViewportParams) => void
 }
 
 export const ViewportContext = createContext<ViewportContext>({
-  viewportParams: {
-    offset: new Vec2(0, 0),
-    scaleFactor: 0
-  },
+  getViewportParams: () => { throw new Error("Method not implemented!"); },
   convertToViewportPos: () => { throw new Error("Method not implemented!"); },
+  convertToContainerPos: () => { throw new Error("Method not implemented!"); },
+
   updateViewportOffset: () => { throw new Error("Method not implemented!"); },
   updateScaleFactor: () => { throw new Error("Method not implemented!"); },
-
-  setViewportParams: () => { throw new Error("Method not implemented"); }
+  updateViewportParams: () => { throw new Error("Method not implemented"); }
 });

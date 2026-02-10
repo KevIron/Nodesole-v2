@@ -9,40 +9,25 @@ type ZoomOptions = {
 }
 
 export default function useZoom({ minZoom, maxZoom, zoomSpeed }: ZoomOptions) {
-  const { setViewportParams } = useViewportContext();
+  const { getViewportParams, updateViewportParams, convertToContainerPos } = useViewportContext();
 
   function handleZoom(e: React.WheelEvent) {
-    setViewportParams(prev => {
-      const prevScaleFactor = prev.scaleFactor;
+    const params = getViewportParams();
 
-      const delta = Math.exp(-e.deltaY * zoomSpeed);
-      const newScaleFactor = clamp(minZoom, maxZoom, prevScaleFactor * delta);
+    const prevScaleFactor = params.scaleFactor;
+    const scaleFactor = clamp(minZoom, maxZoom, prevScaleFactor * Math.exp(-e.deltaY * zoomSpeed));
 
-      const ratio = 1 - newScaleFactor / prevScaleFactor;
+    const ratio = 1 - scaleFactor / prevScaleFactor;
+    
+    const mousePos = new Vec2(e.clientX, e.clientY);
+    const mouseContainerPos = convertToContainerPos(mousePos);
 
-      const target = e.target as HTMLElement;
-      const viewportCnt= target.closest<HTMLDivElement>(".viewport");
+    const offsetModifier = mouseContainerPos.subtract(params.offset).multiplyAll(ratio);
+    const newOffset = params.offset.add(offsetModifier);
 
-      if (!viewportCnt) return {
-        ...prev
-      };
-
-      const viewportCntRect = viewportCnt.getBoundingClientRect();
-
-      const viewportCntPos = new Vec2(viewportCntRect.x, viewportCntRect.y);
-      const mousePosCntRelative = new Vec2(e.clientX, e.clientY).subtract(viewportCntPos);
-
-      console.log(mousePosCntRelative)
-
-      const newOffset = mousePosCntRelative
-        .subtract(prev.offset)
-        .multiplyAll(ratio)
-        .add(prev.offset);
-
-      return {
-        offset: newOffset,
-        scaleFactor: newScaleFactor
-      }
+    updateViewportParams({
+      offset: newOffset,
+      scaleFactor: scaleFactor
     });
   }
 

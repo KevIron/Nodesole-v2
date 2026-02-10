@@ -1,10 +1,11 @@
 import { useRef } from "react";
+
 import useDrag from "./useDrag";
 import useViewportContext from "./useViewportContext";
 import Vec2 from "../utils/Vec2";
 
 export default function useViewportDrag() {
-  const { updateViewportOffset, viewportParams } = useViewportContext();
+  const { updateViewportOffset, getViewportParams } = useViewportContext();
   const dragObject = useDrag({ 
     onClick: handleViewportClick,
     onMove: handleViewportPan
@@ -20,7 +21,7 @@ export default function useViewportDrag() {
     );
 
     dragStartPos.current = currentPos;
-    dragStartOffset.current = viewportParams.offset;
+    dragStartOffset.current = getViewportParams().offset;
   }
 
   function handleViewportPan(e: MouseEvent) {

@@ -1,4 +1,4 @@
-import type { ViewportParams } from "../contexts/viewportContext";
+import type { ViewportParams } from "../contexts/ViewportContext";
 import type { Dimensions } from "./Elements";
 import Vec2 from "./Vec2";
 

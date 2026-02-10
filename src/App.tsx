@@ -1,4 +1,5 @@
 import Viewport from "./components/viewport/Viewport";
+import AnimationLoopProvider from "./components/AnimationLoopProvider";
 
 import "./styles/index.css";
 import "./styles/editor.css";
@@ -14,7 +15,9 @@ export default function App() {
         <button>Restart</button>
       </nav>
       <main id="main-panel">
-        <Viewport />
+        <AnimationLoopProvider>
+          <Viewport />
+        </AnimationLoopProvider>
       </main>
       <aside id="side-panel"></aside>
     </div>
