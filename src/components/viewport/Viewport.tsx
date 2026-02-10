@@ -5,32 +5,14 @@ import Workspace from "./Workspace";
 import Vec2 from "../../utils/Vec2";
 
 import { ViewportContext, type ViewportParams } from "../../contexts/ViewportContext";
-import { useAnimationTask } from "../../hooks/useAnimationTask";
 
-function createViewportTransform(params: ViewportParams) {
-  const translate = `translate(${params.offset.x}px, ${params.offset.y}px)`;
-  const scale = `scale(${params.scaleFactor})`;
-
-  return `${translate} ${scale}`;
-}
 
 export default function Viewport() {
   const viewportRef = useRef<HTMLDivElement | null>(null);
-  const workspaceRef = useRef<HTMLDivElement | null>(null);
-
   const viewportParamsRef = useRef<ViewportParams>({
     offset: new Vec2(0, 0),
     scaleFactor: 1
   });
-
-  function updateViewportTransform() {
-    if (!workspaceRef.current) return;
-
-    const viewportTransform = createViewportTransform(viewportParamsRef.current);
-    workspaceRef.current.style.transform = viewportTransform;
-  }
-
-  useAnimationTask(updateViewportTransform);
 
   function getViewportParams() {
     return viewportParamsRef.current;
@@ -86,7 +68,7 @@ export default function Viewport() {
     <ViewportContext value={viewportAPI}>
       <div className="viewport" ref={viewportRef}>
         <Grid gridOptions={gridOptions} />
-        <Workspace workspaceRef={workspaceRef}  />
+        <Workspace />
       </div>
     </ViewportContext>
   );
