@@ -21,17 +21,20 @@ export function drawGrid(context: CanvasRenderingContext2D, dimensions: Dimensio
   const correctionOffset = 0.5;
 
   for (let i = drawingOffset.x; i < dimensions.width; i += spacing) {
-    context.beginPath();
-    context.moveTo(i + correctionOffset, 0);
-    context.lineTo(i + correctionOffset, dimensions.height);
-    context.stroke();
+    const pos = Math.round(i) + correctionOffset;
 
+    context.beginPath();
+    context.moveTo(pos, 0);
+    context.lineTo(pos, dimensions.height);
+    context.stroke();
   }
 
   for (let i = drawingOffset.y; i < dimensions.height; i += spacing) {
+    const pos = Math.round(i) + correctionOffset;
+
     context.beginPath();
-    context.moveTo(0, i + correctionOffset);
-    context.lineTo(dimensions.width, i + correctionOffset);
+    context.moveTo(0, pos);
+    context.lineTo(dimensions.width, pos);
     context.stroke();
   }
 }

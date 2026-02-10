@@ -45,7 +45,7 @@ export default class Vec2 {
     );
   }
 
-  public roundAll(decimals: number) {
+  public roundAll(decimals: number = 0) {
     const decimalPow = Math.pow(10, decimals);
 
     return new Vec2(
