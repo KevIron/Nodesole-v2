@@ -8,11 +8,11 @@ export type GridOptions = {
 }
 
 export function drawGrid(context: CanvasRenderingContext2D, dimensions: Dimensions, viewportParams: ViewportParams, options: GridOptions) {
-  const spacing = Math.ceil(options.spacing * viewportParams.scaleFactor);
+  const spacing = Math.round(options.spacing * viewportParams.scaleFactor);
 
   const drawingOffset = new Vec2(
     (viewportParams.offset.x % spacing),
-    (viewportParams.offset.y % spacing)
+    (viewportParams.offset.y % spacing) 
   );
 
   context.clearRect(0, 0, dimensions.width, dimensions.height);

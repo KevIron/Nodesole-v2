@@ -38,6 +38,13 @@ export default class Vec2 {
     );
   }
 
+  public multiplyAll(factor: number) {
+    return new Vec2(
+      this._x * factor,
+      this._y * factor
+    );
+  }
+
   public roundAll(decimals: number) {
     const decimalPow = Math.pow(10, decimals);
 

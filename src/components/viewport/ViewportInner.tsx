@@ -5,7 +5,7 @@ import useZoom from "../../hooks/useZoom";
 
 export default function ViewportInner() {
   const { handlers: dragHandlers } = useViewportDrag();
-  const { onwWheel: zoomHandler } = useZoom({ minZoom: 0.5, maxZoom: 3, zoomSpeed: 0.003 });
+  const { onwWheel: zoomHandler } = useZoom({ minZoom: 0.5, maxZoom: 3, zoomSpeed: 0.0008 });
 
   const gridOptions = {
     spacing: 20,

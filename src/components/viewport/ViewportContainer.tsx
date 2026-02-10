@@ -9,16 +9,18 @@ export default function ViewportContainer({ children, ...props }: React.Componen
   });
   const viewportRef = useRef<HTMLDivElement | null>(null);
 
-  function convertToViewportPos(pos: Vec2) {
+  function convertToViewportPos(pos: Vec2, params?: ViewportParams) {
     if (!viewportRef.current) throw new Error("Viewport not found!");
+
+    if (params === undefined) params = viewportParams;
 
     const viewportContainerRect = viewportRef.current.getBoundingClientRect();
     const viewportContainerPos = new Vec2(viewportContainerRect.x, viewportContainerRect.y);
 
     const containerRelativePos = pos.subtract(viewportContainerPos);
-    const viewportRelativePos = containerRelativePos.subtract(viewportParams.offset);
+    const viewportRelativePos = containerRelativePos.subtract(params.offset);
 
-    return viewportRelativePos.divideAll(viewportParams.scaleFactor).roundAll(4);
+    return viewportRelativePos.divideAll(params.scaleFactor).roundAll(0);
   }
 
   function updateViewportOffset(newOffset: Vec2) {
@@ -39,7 +41,9 @@ export default function ViewportContainer({ children, ...props }: React.Componen
     viewportParams: viewportParams,
     convertToViewportPos: convertToViewportPos,
     updateViewportOffset: updateViewportOffset,
-    updateScaleFactor: updateScaleFactor
+    updateScaleFactor: updateScaleFactor,
+
+    setViewportParams: setViewportParams
   };
 
   return (

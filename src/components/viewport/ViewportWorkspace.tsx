@@ -14,7 +14,7 @@ export default function ViewportWorkspace() {
   const viewportTransform = createViewportTransform(viewportParams);
 
   return (
-    <div className="viewport-workspace" style={{ transform: viewportTransform }}>
+    <div className="viewport-workspace" style={{ transformOrigin: "top left", transform: viewportTransform }}>
       <div className="nodes-container">
         <EntryNode />
       </div>
