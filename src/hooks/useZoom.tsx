@@ -32,6 +32,6 @@ export default function useZoom({ minZoom, maxZoom, zoomSpeed }: ZoomOptions) {
   }
 
   return { 
-    onwWheel: handleZoom
+    onWheel: handleZoom
   }
 }

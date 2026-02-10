@@ -13,7 +13,7 @@ type ViewportGridProps = React.ComponentPropsWithRef<"div"> & {
 
 export default function Grid({ gridOptions, ...props }: ViewportGridProps) {
   const { handlers: dragHandlers } = useViewportDrag();
-  const { onwWheel: zoomHandler } = useZoom({ minZoom: 0.5, maxZoom: 3, zoomSpeed: 0.0008 });
+  const { onWheel } = useZoom({ minZoom: 0.5, maxZoom: 3.75, zoomSpeed: 0.003 });
 
   const dimensionsRef = useRef<Dimensions>({ width: 0, height: 0 });
 
@@ -48,14 +48,14 @@ export default function Grid({ gridOptions, ...props }: ViewportGridProps) {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-
+  
   useAnimationTask(redrawGrid);
 
   return (
     <div 
       ref={canvasContainerRef} 
       className="grid-container"
-      onWheel={zoomHandler}
+      onWheel={onWheel}
       {...dragHandlers}
       {...props}
     >

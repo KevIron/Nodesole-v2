@@ -52,7 +52,7 @@ export default function Viewport() {
     const containerRelativePos = convertToContainerPos(pos);
     const viewportRelativePos = containerRelativePos.subtract(params.offset);
 
-    return viewportRelativePos.divideAll(params.scaleFactor).roundAll(2);
+    return viewportRelativePos.divideAll(params.scaleFactor);
   }
 
   function updateViewportOffset(offset: Vec2) {

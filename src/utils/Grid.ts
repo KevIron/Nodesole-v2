@@ -8,7 +8,7 @@ export type GridOptions = {
 }
 
 export function drawGrid(context: CanvasRenderingContext2D, dimensions: Dimensions, viewportParams: ViewportParams, options: GridOptions) {
-  const spacing = Math.round(options.spacing * viewportParams.scaleFactor);
+  const spacing = options.spacing * viewportParams.scaleFactor;
 
   const drawingOffset = new Vec2(
     (viewportParams.offset.x % spacing),
