@@ -59,9 +59,11 @@ export default function Viewport() {
     updateViewportParams
   };
 
+  // Grid initialization
+
   const gridOptions = {
     spacing: 20,
-    lineColor: "#868e96"
+    lineColor: "#000000"
   };
 
   return (

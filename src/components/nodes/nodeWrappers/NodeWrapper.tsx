@@ -1,18 +1,15 @@
-import { useRef, useState, type ReactNode } from "react";
+import { useRef, useState } from "react";
+import Vec2 from "../../../utils/Vec2";
+import useDrag from "../../../hooks/useDrag";
+import useViewportContext from "../../../hooks/useViewportContext";
 
-import Vec2 from "../../utils/Vec2";
-import useDrag from "../../hooks/useDrag";
-import useViewportContext from "../../hooks/useViewportContext";
-
-type NodeWrapperProps = {
-  children: ReactNode[] | ReactNode
-}
+type NodeWrapperProps = React.PropsWithChildren<React.ComponentProps<"div">>;
 
 function createNodeTransform(pos: Vec2) {
   return `translate(${pos.x}px, ${pos.y}px)`;
 }
 
-export default function NodeWrapper({children}: NodeWrapperProps) {
+export default function NodeWrapper({ className, style, children, ...props }: NodeWrapperProps) {
   const [nodePosition, setNodePosition] = useState<Vec2>(new Vec2(0, 0));
   
   const nodeClickOffset = useRef<Vec2 | null>(null);
@@ -53,9 +50,10 @@ export default function NodeWrapper({children}: NodeWrapperProps) {
 
   return (
     <div 
-      className="node" 
-      style={{ transform: nodeTransform }} 
+      className={`node ${className}`} 
+      style={{ transform: nodeTransform, ...style }} 
       {...handlers}
+      {...props}
     >
       {children}
     </div>

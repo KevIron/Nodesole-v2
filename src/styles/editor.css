@@ -27,8 +27,9 @@
 /* Main panel */
 
 #main-panel {
-    background-color: var(--bg-200);
-    box-shadow: inset -5px 5px 10px rgba(0, 0, 0, 0.1);
+    background-color: var(--bg-300);
+    box-shadow: inset -3px 3px 10px rgba(0, 0, 0, 0.2),
+                inset -9px 9px 16px rgba(0, 0, 0, 0.1);
 }
 
 /* Side panel */

@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { useAnimationTask } from "../../hooks/useAnimationTask";
 
-import EntryNode from "../nodes/EntryNode";
+import EntryNode from "../nodes/nodeTypes/EntryNode";
 import useViewportContext from "../../hooks/useViewportContext";
 
 import type { ViewportParams } from "../../contexts/ViewportContext";

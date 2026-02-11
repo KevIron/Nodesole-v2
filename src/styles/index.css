@@ -1,6 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&display=swap');
+
 :root {
-    --bg-100: #ffffff;
-    --bg-200: #f7f7f7;
+    --bg-100: #333333;
+    --bg-200: #292929;
+    --bg-300: #1A1A1A;
+
+    --text-200: #B3B3B3;
+
+    --border-100: 2px solid var();
 }
 
 * {
@@ -11,13 +18,14 @@
 
 html {
     font-size: 62.5%;
+    font-family: "Fira Code", sans-serif;
 }
 
 body {
     height: 100vh;
     font-size: 1.6rem;
 
-    background-color: var(--bg-200);
+    background-color: var(--bg-300);
 }
 
 body, #root {
