@@ -1,13 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&display=swap');
 
 :root {
-    --bg-100: #333333;
-    --bg-200: #292929;
-    --bg-300: #1A1A1A;
+    --bg-100: hsl(0, 0%, 20%);
+    --bg-200: hsl(0, 0%, 15%);
+    --bg-300: hsl(0, 0%, 10%);
 
+    --bg-light-100: hsl(0, 0%, 30%);
+    --bg-light-200: hsl(0, 0%, 38%);
+
+    --text-100: #D9D9D9;
     --text-200: #B3B3B3;
-
-    --border-100: 2px solid var();
 }
 
 * {

@@ -1,5 +1,5 @@
-import DataConnector from "../../assets/data_connector.svg?react"
-import FlowConnector from "../../assets/flow_connector.svg?react"
+import DataConnector from "../../assets/icons/data_connector.svg?react"
+import FlowConnector from "../../assets/icons/flow_connector.svg?react"
 
 type ConnectorProps = {
   type: "data" | "flow",

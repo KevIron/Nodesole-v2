@@ -28,6 +28,8 @@
 
 .node__regular {
     .node-header {
+        user-select: none;
+
         background-color: var(--node-color);
         padding: 0.2rem 2.4rem;
 
