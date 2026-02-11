@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { AnimationLoopContext, type AnimationTask } from "../contexts/AnimationLoopContext";
+import { AnimationLoopContext, type AnimationTask } from "../../contexts/AnimationLoopContext";
 
 export default function AnimationLoopProvider({ children }: React.PropsWithChildren) {
   const animationTasks = useRef<Set<AnimationTask>>(new Set());

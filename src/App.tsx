@@ -1,5 +1,5 @@
 import Viewport from "./components/viewport/Viewport";
-import AnimationLoopProvider from "./components/AnimationLoopProvider";
+import AnimationLoopProvider from "./components/providers/AnimationLoopProvider";
 
 import "./styles/index.css";
 import "./styles/editor.css";
