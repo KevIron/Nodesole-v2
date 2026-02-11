@@ -1,12 +1,14 @@
 import NodeWrapper from "./NodeWrapper";
 
 type RegularNodeWrapperProps = React.PropsWithChildren<React.ComponentProps<"div">> & {
-  title: string
+  title: string,
+  color: string
 }
 
-export default function RegularNodeWrapper({ title, children, className, ...props }: RegularNodeWrapperProps) {
+export default function RegularNodeWrapper({ title, children, className, color, ...props }: RegularNodeWrapperProps) {
   return (
     <NodeWrapper 
+      color={color}
       className={`node__regular ${className}`}
       {...props}
     >

@@ -2,7 +2,7 @@
 
 .node {
     --node-header-text-color: #0D0D0D;
-    --node-color: hsl(145deg, 88%, 45%);
+    --node-color: none;
 
     position: absolute;
     top: 0;
@@ -58,5 +58,12 @@
     .node-body {
         display: flex;
         justify-content: flex-end;
+    }
+}
+
+.node__end {
+    .node-body {
+        display: flex;
+        justify-content: flex-start;
     }
 }

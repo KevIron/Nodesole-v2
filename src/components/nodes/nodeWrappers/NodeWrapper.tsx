@@ -3,13 +3,15 @@ import Vec2 from "../../../utils/Vec2";
 import useDrag from "../../../hooks/useDrag";
 import useViewportContext from "../../../hooks/useViewportContext";
 
-type NodeWrapperProps = React.PropsWithChildren<React.ComponentProps<"div">>;
+type NodeWrapperProps = React.PropsWithChildren<React.ComponentProps<"div">> & {
+  color: string
+};
 
 function createNodeTransform(pos: Vec2) {
   return `translate(${pos.x}px, ${pos.y}px)`;
 }
 
-export default function NodeWrapper({ className, style, children, ...props }: NodeWrapperProps) {
+export default function NodeWrapper({ className, style, color, children, ...props }: NodeWrapperProps) {
   const [nodePosition, setNodePosition] = useState<Vec2>(new Vec2(0, 0));
   
   const nodeClickOffset = useRef<Vec2 | null>(null);
@@ -47,11 +49,16 @@ export default function NodeWrapper({ className, style, children, ...props }: No
   }  
 
   const nodeTransform = createNodeTransform(nodePosition);
+  const nodeStyle = { 
+    "--node-color": color,
+    transform: nodeTransform, 
+    ...style
+  } as React.CSSProperties
 
   return (
     <div 
       className={`node ${className}`} 
-      style={{ transform: nodeTransform, ...style }} 
+      style={nodeStyle} 
       {...handlers}
       {...props}
     >

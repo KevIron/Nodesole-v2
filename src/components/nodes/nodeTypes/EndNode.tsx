@@ -2,16 +2,16 @@ import { NODE_COLORS } from "../../../utils/NodeColors";
 import Connector from "../Connector";
 import RegularNodeWrapper from "../nodeWrappers/RegularNodeWrapper";
 
-export default function EntryNode() {
+export default function EndNode() {
   return (
     <RegularNodeWrapper 
-      className="node__entry"  
-      title="Entry Point"
-      color={NODE_COLORS.NODE_ENTRY}
+      className="node__end"  
+      title="End Point"
+      color={NODE_COLORS.NODE_END}
     >
       <Connector 
         type="flow"
-        direction="output"
+        direction="input"
         name="test"
       />
     </RegularNodeWrapper>

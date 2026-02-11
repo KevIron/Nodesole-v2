@@ -2,6 +2,7 @@ import { useRef } from "react";
 import { useAnimationTask } from "../../hooks/useAnimationTask";
 
 import EntryNode from "../nodes/nodeTypes/EntryNode";
+import EndNode from "../nodes/nodeTypes/EndNode";
 import useViewportContext from "../../hooks/useViewportContext";
 
 import type { ViewportParams } from "../../contexts/ViewportContext";
@@ -31,6 +32,7 @@ export default function Workspace() {
   return (
     <div className="viewport-workspace" ref={workspaceRef}>
       <EntryNode />
+      <EndNode />
     </div>
   )
 }
