@@ -9,7 +9,7 @@ export default function EntryNode() {
     >
       <Connector 
         type="flow"
-        direction="input"
+        direction="output"
         name="test"
       />
     </RegularNodeWrapper>

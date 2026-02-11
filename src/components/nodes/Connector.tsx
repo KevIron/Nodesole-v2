@@ -5,9 +5,10 @@ type ConnectorProps = {
   type: "data" | "flow",
   direction: "input" | "output",
   name: string
+  description?: string
 }
 
-export default function Connector({ type, direction, name }: ConnectorProps) {
+export default function Connector({ type, direction, name, description }: ConnectorProps) {
   // const { isDragging, handlers } = useDrag<SVGSVGElement>();
 
   const connectorStyle: React.CSSProperties = {
@@ -15,7 +16,8 @@ export default function Connector({ type, direction, name }: ConnectorProps) {
   }
 
   return (
-    <>
+    <div className="connector-wrapper">
+      {direction === "output" && <span>{description}</span>}
       {type === "data" ? (
         <DataConnector 
           data-connector-name={name}
@@ -33,6 +35,7 @@ export default function Connector({ type, direction, name }: ConnectorProps) {
           style={connectorStyle}
         /> 
       )} 
-    </>
+      {direction === "input" && <span>{description}</span> }
+    </div>
   );
 }
