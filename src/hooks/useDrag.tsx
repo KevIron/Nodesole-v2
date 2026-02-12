@@ -6,11 +6,12 @@ type DragOptions = {
   onRelease?: (e: MouseEvent) => void,
 }
 
-export default function useDrag({ onClick, onRelease, onMove }: DragOptions = {}) {
+export default function useDrag<T = HTMLElement>({ onClick, onRelease, onMove }: DragOptions = {}) {
   const [isDragging, setIsDragging] = useState(false);
 
-  function handleDragStart(e: React.MouseEvent<HTMLElement>) {
+  function handleDragStart(e: React.MouseEvent<T>) {
     e.preventDefault();
+    e.stopPropagation();
 
     onClick?.(e.nativeEvent);
     setIsDragging(true);
