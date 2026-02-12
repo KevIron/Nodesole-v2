@@ -1,7 +1,8 @@
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import Vec2 from "../../../utils/Vec2";
 import useDrag from "../../../hooks/useDrag";
 import useViewportContext from "../../../hooks/useViewportContext";
+import { useAnimationTask } from "../../../hooks/useAnimationTask";
 
 type NodeWrapperProps = React.PropsWithChildren<React.ComponentProps<"div">> & {
   color: string
@@ -12,14 +13,17 @@ function createNodeTransform(pos: Vec2) {
 }
 
 export default function NodeWrapper({ className, style, color, children, ...props }: NodeWrapperProps) {
-  const [nodePosition, setNodePosition] = useState<Vec2>(new Vec2(0, 0));
-  
-  const nodeClickOffset = useRef<Vec2 | null>(null);
-  const { convertToViewportPos } = useViewportContext();
+  const nodeRef = useRef<HTMLDivElement | null>(null);  
 
+  const nodePositionRef = useRef<Vec2>(new Vec2(0, 0));
+  const nodeClickOffset = useRef<Vec2 | null>(null);
+
+  const { convertToViewportPos } = useViewportContext();
+  const { attach, detach } = useAnimationTask(updateNodeTransform);
   const { handlers } = useDrag({ 
     onClick: handleClickNode,
-    onMove: handleMoveNode 
+    onMove: handleMoveNode, 
+    onRelease: detach
   });
 
   function handleClickNode(e: MouseEvent) {
@@ -29,9 +33,10 @@ export default function NodeWrapper({ className, style, color, children, ...prop
     );
 
     const currentViewportPos = convertToViewportPos(currentPos);
-    const offset = currentViewportPos.subtract(nodePosition);
+    const offset = currentViewportPos.subtract(nodePositionRef.current);
     
     nodeClickOffset.current = offset;
+    attach();
   }
 
   function handleMoveNode(e: MouseEvent) {
@@ -44,19 +49,28 @@ export default function NodeWrapper({ className, style, color, children, ...prop
       const currentViewportPos = convertToViewportPos(currentPos);
       const newNodePos = currentViewportPos.subtract(nodeClickOffset.current);
 
-      setNodePosition(newNodePos);
+      nodePositionRef.current = newNodePos;
     }
-  }  
+  } 
 
-  const nodeTransform = createNodeTransform(nodePosition);
+  function updateNodeTransform() {
+    if (!nodeRef.current) return;
+
+    const node = nodeRef.current;
+    const nodeTransform = createNodeTransform(nodePositionRef.current);
+
+    node.style.transform = nodeTransform;
+  }
+
+  
   const nodeStyle = { 
     "--node-color": color,
-    transform: nodeTransform, 
     ...style
   } as React.CSSProperties
 
   return (
     <div 
+      ref={nodeRef}
       className={`node ${className}`} 
       style={nodeStyle} 
       {...handlers}
