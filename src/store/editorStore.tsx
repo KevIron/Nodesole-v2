@@ -2,24 +2,28 @@ import { create } from "zustand";
 import type { Connection, NodeData, NodeTypes } from "../types/EditorTypes";
 
 export const useEditorStore = create<{
-  nodes: Array<NodeData<NodeTypes>>,
-  connections: Array<Connection>
+  nodes: Record<string, NodeData<NodeTypes>>,
+  connections: Record<string, Connection>
 
   addNode: <T extends NodeTypes>(node: NodeData<T>) => void
   removeNode: (nodeId: string) => void
 }>((set) => ({
-  nodes: [],
-  connections: [],
+  nodes: {},
+  connections: {},
 
   addNode<T extends NodeTypes>(node: NodeData<T>) {
     set(prev => ({
-      nodes: [ ...prev.nodes, node ]
+      nodes: {
+        ...prev.nodes,
+        [node.id]: node
+      }
     }));
   }, 
 
   removeNode(nodeId: string) {
-    set(prev => ({
-      nodes: prev.nodes.filter(node => node.id !== nodeId)
-    }));
+    set(prev => {
+      const { [nodeId]: _, ...nodes } = prev.nodes;
+      return nodes;
+    });
   }
 }));

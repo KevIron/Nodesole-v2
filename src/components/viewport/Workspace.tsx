@@ -33,7 +33,7 @@ export default function Workspace() {
 
   return (
     <div className="viewport-workspace" ref={workspaceRef}>
-      {nodes.map(node => createNodeComponent(node))}
+      {Object.values(nodes).map(node => createNodeComponent(node))}
     </div>
   )
 }
