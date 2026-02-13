@@ -2,7 +2,6 @@ import { useRef } from "react";
 import Vec2 from "../../../utils/Vec2";
 import useDrag from "../../../hooks/useDrag";
 import useViewportContext from "../../../hooks/useViewportContext";
-import { useAnimationTask } from "../../../hooks/useAnimationTask";
 import { NodeContext } from "../../../contexts/NodeContext";
 
 type NodeWrapperProps = React.PropsWithChildren<React.ComponentProps<"div">> & {
@@ -21,11 +20,9 @@ export default function NodeWrapper({ nodeId, className, style, color, children,
   const nodeClickOffset = useRef<Vec2 | null>(null);
 
   const { convertToViewportPos } = useViewportContext();
-  const { attach, detach } = useAnimationTask(updateNodeTransform);
   const { handlers } = useDrag({ 
     onClick: handleClickNode,
     onMove: handleMoveNode, 
-    onRelease: detach
   });
 
   function handleClickNode(e: MouseEvent) {
@@ -38,7 +35,6 @@ export default function NodeWrapper({ nodeId, className, style, color, children,
     const offset = currentViewportPos.subtract(nodePositionRef.current);
     
     nodeClickOffset.current = offset;
-    attach();
   }
 
   function handleMoveNode(e: MouseEvent) {

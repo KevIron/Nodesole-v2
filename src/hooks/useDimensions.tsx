@@ -1,14 +1,14 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getElementDimensions, type Dimensions } from "../utils/Elements";
 
 export default function useDimensionsRef<T extends HTMLElement>() {
+  const [dimensions, setDimensions] = useState<Dimensions>({ width: 0, height: 0 });
   const containerRef = useRef<T | null>(null);
-  const dimensionsRef = useRef<Dimensions>({ width: 0, height: 0 });
 
   useEffect(() => {
     function handleResize() {
       if (!containerRef.current) return;
-      dimensionsRef.current = getElementDimensions(containerRef.current); 
+      setDimensions(getElementDimensions(containerRef.current)); 
     } 
 
     handleResize();
@@ -19,6 +19,6 @@ export default function useDimensionsRef<T extends HTMLElement>() {
 
   return {
     containerRef,
-    dimensionsRef
+    dimensions
   }
 }

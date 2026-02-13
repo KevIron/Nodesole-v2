@@ -1,11 +1,7 @@
-import { useRef } from "react";
-import { useAnimationTask } from "../../hooks/useAnimationTask";
 import { useEditorStore } from "../../store/editorStore";
-
-import useViewportContext from "../../hooks/useViewportContext";
+import createNodeComponent from "../../utils/NodeFactory";
 
 import type { ViewportParams } from "../../contexts/ViewportContext";
-import createNodeComponent from "../../utils/NodeFactory";
 
 function createViewportTransform(params: ViewportParams) {
   const translate = `translate(${params.offset.x}px, ${params.offset.y}px)`;
@@ -15,24 +11,15 @@ function createViewportTransform(params: ViewportParams) {
 }
 
 export default function Workspace() {
+  const viewportParams = useEditorStore((state) => state.viewportParams)
   const nodes = useEditorStore((state) => state.nodes);
 
-  const workspaceRef = useRef<HTMLDivElement | null>(null);
-  const { getViewportParams } = useViewportContext();
-
-  function updateWorkspaceTransform() {
-    if (!workspaceRef.current) return;
-
-    const viewportParams = getViewportParams();
-    const viewportTransform = createViewportTransform(viewportParams);
-    
-    workspaceRef.current.style.transform = viewportTransform;
-  }
-  
-  useAnimationTask(updateWorkspaceTransform);
+  const workspaceStyle = {
+    transform: createViewportTransform(viewportParams)
+  } as React.CSSProperties
 
   return (
-    <div className="viewport-workspace" ref={workspaceRef}>
+    <div className="viewport-workspace" style={workspaceStyle}>
       {Object.values(nodes).map(node => createNodeComponent(node))}
     </div>
   )

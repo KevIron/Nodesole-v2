@@ -1,5 +1,4 @@
 import Viewport from "./components/viewport/Viewport";
-import AnimationLoopProvider from "./components/providers/AnimationLoopProvider";
 
 import "./styles/index.css";
 import "./styles/editor.css";
@@ -14,9 +13,7 @@ export default function App() {
     <div id="editor">
       <ActionBar />
       <main id="main-panel">
-        <AnimationLoopProvider>
           <Viewport />
-        </AnimationLoopProvider>
       </main>
       <SidePanel />
     </div>

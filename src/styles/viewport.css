@@ -20,10 +20,10 @@
 
     .viewport-workspace {
         transform-origin: top left;
+        position: relative;
     }
 
     .grid-container {
-        z-index: 0;
         grid-area: stack;
     }
 

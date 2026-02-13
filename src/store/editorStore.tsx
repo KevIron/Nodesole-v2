@@ -14,7 +14,7 @@ export const useEditorStore = create<{
 }>((set) => ({
   viewportParams: {
     offset: new Vec2(0, 0),
-    scaleFactor: 0
+    scaleFactor: 1
   },
 
   nodes: {},
@@ -34,7 +34,7 @@ export const useEditorStore = create<{
       const { [nodeId]: _, ...nodes } = prev.nodes;
       return nodes;
     });
-  }
+  },
 
   connectNodes() {
     

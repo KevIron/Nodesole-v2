@@ -1,8 +1,7 @@
 import { useRef } from "react";
-import { useAnimationTask } from "../../hooks/useAnimationTask";
 import { useEditorStore } from "../../store/editorStore";
 
-import useDimensionsRef from "../../hooks/useDimensionsRef";
+import useDimensionsRef from "../../hooks/useDimensions";
 import useViewportContext from "../../hooks/useViewportContext";
 
 import type { ViewportParams } from "../../contexts/ViewportContext";
@@ -40,7 +39,6 @@ export default function Connections() {
     svgGroupRef.current.setAttribute("transform", createGroupTransform(viewportParams));
   }
 
-  useAnimationTask(updateConnectionsTransform);
 
   return (
     <div className="connections-container" ref={containerRef}>
