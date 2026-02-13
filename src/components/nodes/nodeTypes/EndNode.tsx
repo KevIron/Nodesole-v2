@@ -1,8 +1,11 @@
+import type { NodeProps } from "../../../types/EditorTypes";
 import { NODE_COLORS } from "../../../utils/NodeColors";
 import Connector from "../Connector";
 import RegularNodeWrapper from "../nodeWrappers/RegularNodeWrapper";
 
-export default function EndNode() {
+export default function EndNode({ data }: NodeProps<"END_NODE">) {
+  console.log(data)
+
   return (
     <RegularNodeWrapper 
       className="node__end"  
