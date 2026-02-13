@@ -4,10 +4,9 @@ import Connector from "../Connector";
 import RegularNodeWrapper from "../nodeWrappers/RegularNodeWrapper";
 
 export default function EntryNode({ data }: NodeProps<"ENTRY_NODE">) {
-  console.log(data)
-
   return (
     <RegularNodeWrapper 
+      nodeId={data.id}
       className="node__entry"  
       title="Entry Point"
       color={NODE_COLORS.NODE_ENTRY}

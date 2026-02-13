@@ -31,7 +31,9 @@ type Connector = {
   pos: Vec2
 }
 
-export type Connection = {
+export type ConnectionData = {
+  id: string
+  isVisible: boolean
   inputConnector: Connector,
   outputConnector: Connector
 }

@@ -3,16 +3,18 @@ import Vec2 from "../../../utils/Vec2";
 import useDrag from "../../../hooks/useDrag";
 import useViewportContext from "../../../hooks/useViewportContext";
 import { useAnimationTask } from "../../../hooks/useAnimationTask";
+import { NodeContext } from "../../../contexts/NodeContext";
 
 type NodeWrapperProps = React.PropsWithChildren<React.ComponentProps<"div">> & {
   color: string
+  nodeId: string
 };
 
 function createNodeTransform(pos: Vec2) {
   return `translate(${pos.x}px, ${pos.y}px)`;
 }
 
-export default function NodeWrapper({ className, style, color, children, ...props }: NodeWrapperProps) {
+export default function NodeWrapper({ nodeId, className, style, color, children, ...props }: NodeWrapperProps) {
   const nodeRef = useRef<HTMLDivElement | null>(null);  
 
   const nodePositionRef = useRef<Vec2>(new Vec2(0, 0));
@@ -68,15 +70,21 @@ export default function NodeWrapper({ className, style, color, children, ...prop
     ...style
   } as React.CSSProperties
 
+  const nodeContextValue = {
+    id: nodeId
+  }
+
   return (
-    <div 
-      ref={nodeRef}
-      className={`node ${className}`} 
-      style={nodeStyle} 
-      {...handlers}
-      {...props}
-    >
-      {children}
-    </div>
+    <NodeContext value={nodeContextValue}>
+      <div 
+        ref={nodeRef}
+        className={`node ${className}`} 
+        style={nodeStyle} 
+        {...handlers}
+        {...props}
+      >
+        {children}
+      </div>
+    </NodeContext>
   );
 }

@@ -4,10 +4,11 @@ import Connector from "../Connector";
 import RegularNodeWrapper from "../nodeWrappers/RegularNodeWrapper";
 
 export default function EndNode({ data }: NodeProps<"END_NODE">) {
-  console.log(data)
+  
 
   return (
-    <RegularNodeWrapper 
+    <RegularNodeWrapper
+      nodeId={data.id} 
       className="node__end"  
       title="End Point"
       color={NODE_COLORS.NODE_END}

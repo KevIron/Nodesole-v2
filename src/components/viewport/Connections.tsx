@@ -1,10 +1,12 @@
 import { useRef } from "react";
 import { useAnimationTask } from "../../hooks/useAnimationTask";
+import { useEditorStore } from "../../store/editorStore";
 
 import useDimensionsRef from "../../hooks/useDimensionsRef";
 import useViewportContext from "../../hooks/useViewportContext";
 
 import type { ViewportParams } from "../../contexts/ViewportContext";
+import Connection from "../nodes/Connection";
 
 function createGroupTransform(params: ViewportParams) {
   const translate = `translate(${params.offset.x}, ${params.offset.y})`;
@@ -14,6 +16,8 @@ function createGroupTransform(params: ViewportParams) {
 }
 
 export default function Connections() {
+  const connections = useEditorStore((state) => state.connections);
+
   const { containerRef, dimensionsRef } = useDimensionsRef<HTMLDivElement>();
   const { getViewportParams } = useViewportContext();
 
@@ -42,7 +46,9 @@ export default function Connections() {
     <div className="connections-container" ref={containerRef}>
       <svg xmlns="http://www.w3.org/2000/svg" ref={svgRef}>
         <g name="connections-group" ref={svgGroupRef}>
-          
+          {Object.values(connections).map(conn => (
+            <Connection key={conn.id} data={conn} />
+          ))}
         </g>
       </svg>
     </div>

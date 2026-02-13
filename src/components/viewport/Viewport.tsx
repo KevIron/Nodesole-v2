@@ -49,6 +49,8 @@ export default function Viewport() {
     viewportParamsRef.current = params;
   }
 
+  // Temporary Connections
+
   const viewportAPI = {
     getViewportParams,
     convertToViewportPos,
