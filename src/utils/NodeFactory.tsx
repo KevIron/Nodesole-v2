@@ -12,5 +12,5 @@ const NODE_COMPONENT_MAP = {
 
 export default function createNodeComponent<T extends NodeTypes>(node: NodeData<T>) {
   const Component = NODE_COMPONENT_MAP[node.type] as React.ComponentType<NodeProps<T>>;
-  return <Component data={node} />
+  return <Component key={node.id} data={node} />
 }

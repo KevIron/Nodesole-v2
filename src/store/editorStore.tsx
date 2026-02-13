@@ -1,6 +1,5 @@
 import { create } from "zustand";
 import type { Connection, NodeData, NodeTypes } from "../types/EditorTypes";
-import Vec2 from "../utils/Vec2";
 
 export const useEditorStore = create<{
   nodes: Array<NodeData<NodeTypes>>,
@@ -9,13 +8,7 @@ export const useEditorStore = create<{
   addNode: <T extends NodeTypes>(node: NodeData<T>) => void
   removeNode: (nodeId: string) => void
 }>((set) => ({
-  nodes: [ {
-    id: "",
-    type: "ENTRY_NODE",
-    data: {
-      pos: new Vec2(0, 0)
-    }
-  } ],
+  nodes: [],
   connections: [],
 
   addNode<T extends NodeTypes>(node: NodeData<T>) {
