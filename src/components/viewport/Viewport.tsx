@@ -9,14 +9,6 @@ import { ViewportContext, type ViewportParams } from "../../contexts/ViewportCon
 
 export default function Viewport() {
   const viewportRef = useRef<HTMLDivElement | null>(null);
-  const viewportParamsRef = useRef<ViewportParams>({
-    offset: new Vec2(0, 0),
-    scaleFactor: 1
-  });
-
-  function getViewportParams() {
-    return viewportParamsRef.current;
-  }
 
   function convertToContainerPos(pos: Vec2) {
     if (!viewportRef.current) throw new Error("Viewport not found!");
@@ -29,36 +21,16 @@ export default function Viewport() {
     return containerRelativePos;
   }
 
-  function convertToViewportPos(pos: Vec2) {
-    const params = getViewportParams();
+  function convertToViewportPos(pos: Vec2, params: ViewportParams) {
     const containerRelativePos = convertToContainerPos(pos);
     const viewportRelativePos = containerRelativePos.subtract(params.offset);
 
     return viewportRelativePos.divideAll(params.scaleFactor);
   }
 
-  function updateViewportOffset(offset: Vec2) {
-    viewportParamsRef.current.offset = offset;
-  }
-
-  function updateScaleFactor(factor: number) {
-    viewportParamsRef.current.scaleFactor = factor;
-  }
-
-  function updateViewportParams(params: ViewportParams) {
-    viewportParamsRef.current = params;
-  }
-
-  // Temporary Connections
-
   const viewportAPI = {
-    getViewportParams,
     convertToViewportPos,
     convertToContainerPos,
-
-    updateViewportOffset,
-    updateScaleFactor,
-    updateViewportParams
   };
 
   // Grid initialization

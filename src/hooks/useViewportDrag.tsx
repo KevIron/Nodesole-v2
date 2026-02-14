@@ -1,18 +1,19 @@
 import { useRef } from "react";
 
 import useDrag from "./useDrag";
-import useViewportContext from "./useViewportContext";
 import Vec2 from "../utils/Vec2";
 
+import { useEditorStore } from "../store/editorStore";
+
 export default function useViewportDrag() {
-  const { updateViewportOffset, getViewportParams } = useViewportContext();
+  const updateViewportParams = useEditorStore((state) => state.updateViewportParams)
+
   const dragObject = useDrag({ 
     onClick: handleViewportClick,
     onMove: handleViewportPan
   });
 
   const dragStartPos = useRef<Vec2 | null>(null);
-  const dragStartOffset = useRef<Vec2 | null>(null);
 
   function handleViewportClick(e: MouseEvent) {
     const currentPos = new Vec2(
@@ -21,11 +22,10 @@ export default function useViewportDrag() {
     );
 
     dragStartPos.current = currentPos;
-    dragStartOffset.current = getViewportParams().offset;
   }
 
   function handleViewportPan(e: MouseEvent) {
-    if (!dragStartPos.current || !dragStartOffset.current) return;
+    if (!dragStartPos.current) return;
 
     const currentPos = new Vec2(
         e.clientX, 
@@ -33,9 +33,12 @@ export default function useViewportDrag() {
     );
 
     const delta = currentPos.subtract(dragStartPos.current);
-    const newOffset = dragStartOffset.current.add(delta);
+    dragStartPos.current = currentPos;
 
-    updateViewportOffset(newOffset);
+    updateViewportParams(prev => ({
+      ...prev,
+      offset: prev.offset.add(delta)
+    }));
   }
 
   return dragObject;

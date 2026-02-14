@@ -29,7 +29,7 @@ export default function Grid({ gridOptions, ...props }: ViewportGridProps) {
     canvasRef.current.height = dimensions.height;
 
     drawGrid(context, dimensions, viewportParams, gridOptions);
-  }, [viewportParams, dimensions]);
+  }, [viewportParams, dimensions, gridOptions]);
 
   return (
     <div 

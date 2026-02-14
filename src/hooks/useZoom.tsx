@@ -1,3 +1,4 @@
+import { useEditorStore } from "../store/editorStore";
 import { clamp } from "../utils/Math";
 
 import Vec2 from "../utils/Vec2";
@@ -10,25 +11,26 @@ type ZoomOptions = {
 }
 
 export default function useZoom({ minZoom, maxZoom, zoomSpeed }: ZoomOptions) {
-  const { getViewportParams, updateViewportParams, convertToContainerPos } = useViewportContext();
+  const updateViewportParams = useEditorStore((state) => state.updateViewportParams);
+  const { convertToContainerPos } = useViewportContext();
 
   function handleZoom(e: React.WheelEvent) {
-    const params = getViewportParams();
+    updateViewportParams(prev => {
+      const prevScaleFactor = prev.scaleFactor;
+      const scaleFactor = clamp(minZoom, maxZoom, prevScaleFactor * Math.exp(-e.deltaY * zoomSpeed));
 
-    const prevScaleFactor = params.scaleFactor;
-    const scaleFactor = clamp(minZoom, maxZoom, prevScaleFactor * Math.exp(-e.deltaY * zoomSpeed));
+      const ratio = 1 - scaleFactor / prevScaleFactor;
+      
+      const mousePos = new Vec2(e.clientX, e.clientY);
+      const mouseContainerPos = convertToContainerPos(mousePos);
 
-    const ratio = 1 - scaleFactor / prevScaleFactor;
-    
-    const mousePos = new Vec2(e.clientX, e.clientY);
-    const mouseContainerPos = convertToContainerPos(mousePos);
+      const offsetModifier = mouseContainerPos.subtract(prev.offset).multiplyAll(ratio);
+      const newOffset = prev.offset.add(offsetModifier);
 
-    const offsetModifier = mouseContainerPos.subtract(params.offset).multiplyAll(ratio);
-    const newOffset = params.offset.add(offsetModifier);
-
-    updateViewportParams({
-      offset: newOffset,
-      scaleFactor: scaleFactor
+      return {
+        offset: newOffset,
+        scaleFactor: scaleFactor
+      }
     });
   }
 

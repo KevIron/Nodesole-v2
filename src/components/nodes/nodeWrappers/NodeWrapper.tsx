@@ -3,6 +3,7 @@ import Vec2 from "../../../utils/Vec2";
 import useDrag from "../../../hooks/useDrag";
 import useViewportContext from "../../../hooks/useViewportContext";
 import { NodeContext } from "../../../contexts/NodeContext";
+import { useEditorStore } from "../../../store/editorStore";
 
 type NodeWrapperProps = React.PropsWithChildren<React.ComponentProps<"div">> & {
   color: string
@@ -13,11 +14,12 @@ function createNodeTransform(pos: Vec2) {
   return `translate(${pos.x}px, ${pos.y}px)`;
 }
 
-export default function NodeWrapper({ nodeId, className, style, color, children, ...props }: NodeWrapperProps) {
-  const nodeRef = useRef<HTMLDivElement | null>(null);  
+export default function NodeWrapper({ nodeId, className, style, color, children, ...props }: NodeWrapperProps) { 
+  const nodePosition = useEditorStore((state) => state.nodes[nodeId].data.pos);
+  const updateNodePosition = useEditorStore((state) => state.updateNodePosition);
 
-  const nodePositionRef = useRef<Vec2>(new Vec2(0, 0));
-  const nodeClickOffset = useRef<Vec2 | null>(null);
+  const nodeContainerRef = useRef<HTMLDivElement | null>(null);
+  const nodeClickOffsetRef = useRef<Vec2 | null>(null);
 
   const { convertToViewportPos } = useViewportContext();
   const { handlers } = useDrag({ 
@@ -26,44 +28,37 @@ export default function NodeWrapper({ nodeId, className, style, color, children,
   });
 
   function handleClickNode(e: MouseEvent) {
-    const currentPos = new Vec2(
-        e.clientX, 
-        e.clientY
-    );
+    if (!nodeContainerRef.current) return;
 
-    const currentViewportPos = convertToViewportPos(currentPos);
-    const offset = currentViewportPos.subtract(nodePositionRef.current);
+    const clickPos = new Vec2(e.clientX, e.clientY);
+
+    const nodeRect = nodeContainerRef.current.getBoundingClientRect();
+    const nodePos = new Vec2(nodeRect.x, nodeRect.y);
+
+    const offset = clickPos.subtract(nodePos);
     
-    nodeClickOffset.current = offset;
+    nodeClickOffsetRef.current = offset;
   }
 
   function handleMoveNode(e: MouseEvent) {
-    if (nodeClickOffset.current) {
-      const currentPos = new Vec2(
-        e.clientX, 
-        e.clientY
-      );
+    if (!nodeClickOffsetRef.current) return;
 
-      const currentViewportPos = convertToViewportPos(currentPos);
-      const newNodePos = currentViewportPos.subtract(nodeClickOffset.current);
+    const currentPos = new Vec2(
+      e.clientX, 
+      e.clientY
+    );
 
-      nodePositionRef.current = newNodePos;
-    }
-  } 
-
-  function updateNodeTransform() {
-    if (!nodeRef.current) return;
-
-    const node = nodeRef.current;
-    const nodeTransform = createNodeTransform(nodePositionRef.current);
-
-    node.style.transform = nodeTransform;
+    const offsetPos = currentPos.subtract(nodeClickOffsetRef.current);
+    
+    updateNodePosition(nodeId, prev => {
+      return convertToViewportPos(offsetPos, prev);
+    });
   }
-
   
   const nodeStyle = { 
+    ...style,
+    "transform": createNodeTransform(nodePosition),
     "--node-color": color,
-    ...style
   } as React.CSSProperties
 
   const nodeContextValue = {
@@ -73,7 +68,7 @@ export default function NodeWrapper({ nodeId, className, style, color, children,
   return (
     <NodeContext value={nodeContextValue}>
       <div 
-        ref={nodeRef}
+        ref={nodeContainerRef}
         className={`node ${className}`} 
         style={nodeStyle} 
         {...handlers}
