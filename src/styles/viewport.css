@@ -21,6 +21,7 @@
     .viewport-workspace {
         transform-origin: top left;
         position: relative;
+        will-change: transform;
     }
 
     .grid-container {

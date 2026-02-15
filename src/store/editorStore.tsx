@@ -1,7 +1,10 @@
 import { create } from "zustand";
+import Vec2 from "../utils/Vec2";
+
 import type { ConnectionData, NodeData, NodeTypes } from "../types/EditorTypes";
 import type { ViewportParams } from "../contexts/ViewportContext";
-import Vec2 from "../utils/Vec2";
+
+type EditorStateUpdater<T, K = T> = (prev: T) => K;
 
 export const useEditorStore = create<{
   viewportParams: ViewportParams,
@@ -9,11 +12,15 @@ export const useEditorStore = create<{
   nodes: Record<string, NodeData<NodeTypes>>,
   connections: Record<string, ConnectionData>,
 
+  addConnection: (data: ConnectionData) => void,
+  removeConnection: (connId: string) => void,
+  updateConnection: (connId: string, updater: EditorStateUpdater<ConnectionData>) => void,
+
   addNode: <T extends NodeTypes>(node: NodeData<T>) => void,
   removeNode: (nodeId: string) => void,
-  updateNodePosition: (nodeId: string, callback: (prevParams: ViewportParams) => Vec2) => void
+  updateNodePosition: (nodeId: string, updater: EditorStateUpdater<ViewportParams, Vec2>) => void
 
-  updateViewportParams: (callback: (prevParams: ViewportParams) => ViewportParams) => void
+  updateViewportParams: (updater: EditorStateUpdater<ViewportParams>) => void
 }>((set) => ({
   viewportParams: {
     offset: new Vec2(0, 0),
@@ -35,12 +42,8 @@ export const useEditorStore = create<{
   removeNode(nodeId: string) {
     set(prev => {
       const { [nodeId]: _, ...nodes } = prev.nodes;
-      return nodes;
+      return { nodes };
     });
-  },
-
-  connectNodes() {
-    
   },
 
   updateViewportParams(callback: (prevParams: ViewportParams) => ViewportParams) {
@@ -60,6 +63,31 @@ export const useEditorStore = create<{
             pos: callback(prev.viewportParams)
           }
         }
+      }
+    }));
+  },
+
+  addConnection(data: ConnectionData) {
+    set(prev => ({
+      connections: {
+        ...prev.connections,
+        [data.id]: data
+      }
+    }));
+  },
+
+  removeConnection(connId: string) {
+    set(prev => {
+      const { [connId]: _, ...connections } = prev.connections;
+      return { connections }
+    });
+  },
+
+  updateConnection(connId: string, updater: EditorStateUpdater<ConnectionData>) {
+    set(prev => ({
+      connections: {
+        ...prev.connections,
+        [connId]: updater(prev.connections[connId])
       }
     }));
   }

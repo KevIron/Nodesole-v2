@@ -20,7 +20,7 @@ export default function useDrag<T = HTMLElement>({ onClick, onRelease, onMove }:
   const handleDrag = useEffectEvent((e: MouseEvent) => {
     e.preventDefault();
     
-    if (isDragging) onMove?.(e);
+    onMove?.(e);
   });
 
   const handleDragEnd = useEffectEvent((e: MouseEvent) => {

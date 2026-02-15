@@ -11,8 +11,6 @@ export function smoothConnection(pos1: Vec2, pos2: Vec2, { reversed = false }: C
     pos1 = temp;
   }
 
-  console.log(pos1, pos2)
-
   const connectionLenght = pos2.absoluteDistance(pos1);
 
   const cnt1 = new Vec2(

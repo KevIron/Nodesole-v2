@@ -7,10 +7,10 @@ const NODE_COMPONENT_MAP = {
   ENTRY_NODE: EntryNode,
   END_NODE: EndNode,
 } satisfies {
-  [K in NodeTypes]: React.ComponentType<NodeProps<K>>;
+  [K in NodeTypes]: React.ComponentType<NodeProps>;
 };
 
 export default function createNodeComponent<T extends NodeTypes>(node: NodeData<T>) {
-  const Component = NODE_COMPONENT_MAP[node.type] as React.ComponentType<NodeProps<T>>;
-  return <Component key={node.id} data={node} />
+  const Component = NODE_COMPONENT_MAP[node.type] as React.ComponentType<NodeProps>;
+  return <Component key={node.id} id={node.id} />
 }
