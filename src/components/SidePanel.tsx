@@ -1,34 +1,46 @@
 import { useEditorStore } from "../store/editorStore";
+import type { NodeData, NodeTypes } from "../types/EditorTypes";
 import Vec2 from "../utils/Vec2";
 
 export default function SidePanel() {
   const addNode = useEditorStore((state) => state.addNode);
-  
-  function handleAddEntryNode() {
-    addNode({
-      id: crypto.randomUUID(),
-      type: "ENTRY_NODE",
-      data: {
-        pos: new Vec2(0, 0)
-      }
-    });
-  }
 
-  function handleAddEndNode() {
-    addNode({
-      id: crypto.randomUUID(),
-      type: "END_NODE",
-      data: {
-        pos: new Vec2(0, 0)
-      }
-    });
+  function handleAddNode<T extends NodeTypes>(data: NodeData<T>) {
+    addNode(data);
   }
 
   return (
     <aside id="side-panel">
       <h2>Development options:</h2>
-      <button onClick={handleAddEndNode}>Add end node</button>
-      <button onClick={handleAddEntryNode}>Add entry node</button>
+      <div className="dev-menu">
+        <button onClick={() => handleAddNode({
+          id: crypto.randomUUID(),
+          type: "ENTRY_NODE",
+          data: {
+            pos: new Vec2(0, 0)
+          }
+        })}>
+          Add end node
+        </button>
+        <button onClick={() => handleAddNode({
+          id: crypto.randomUUID(),
+          type: "END_NODE",
+          data: {
+            pos: new Vec2(0, 0)
+          }
+        })}>
+          Add entry node
+        </button>
+        <button onClick={() => handleAddNode({
+          id: crypto.randomUUID(),
+          type: "CONDITION_NODE",
+          data: {
+            pos: new Vec2(0, 0)
+          }
+        })}>
+          Add condition node
+        </button>
+      </div>
     </aside>
   );
 }

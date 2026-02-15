@@ -8,7 +8,8 @@ type NodeDataBase = {
 
 export type NodeDataTypesMap = {
   "ENTRY_NODE": NodeDataBase,
-  "END_NODE": NodeDataBase
+  "END_NODE": NodeDataBase,
+  "CONDITION_NODE": NodeDataBase
 }
 
 export type NodeTypes = keyof NodeDataTypesMap;

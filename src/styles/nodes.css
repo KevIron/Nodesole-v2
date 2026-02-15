@@ -74,3 +74,26 @@
         justify-content: flex-start;
     }
 }
+
+.node__condition {
+    .node-body {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        justify-content: space-between;
+    }
+
+    .input-connectors,
+    .output-connectors {
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+    }
+
+    .input-connectors .connector-wrapper {
+        justify-content: flex-start;
+    }
+
+    .output-connectors .connector-wrapper {
+        justify-content: flex-end;
+    }
+}

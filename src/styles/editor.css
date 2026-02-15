@@ -67,9 +67,13 @@
 #side-panel {
     background-color: var(--bg-100);
     padding: 1.2rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.2rem;
+
+    .dev-menu {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: min-content min-content;
+        gap: 0.2rem;
+    }
 
     button {
         padding: 0.4rem;
