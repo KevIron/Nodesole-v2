@@ -39,19 +39,24 @@ export const useEditorStore = create<{
   connections: {},
 
   addNode<T extends NodeTypes>(node: NodeData<T>) {
-    set(prev => ({
-      graph: {
-        ...prev.graph,
-        [node.id]: {
-          inputs: [],
-          outputs: []
+
+    set(prev => {
+      if (Object.hasOwn(prev.nodes, node.id)) throw new Error("Node id's must be unique!");
+
+      return {
+        graph: {
+          ...prev.graph,
+          [node.id]: {
+            inputs: [],
+            outputs: []
+          }
+        },
+        nodes: {
+          ...prev.nodes,
+          [node.id]: node
         }
-      },
-      nodes: {
-        ...prev.nodes,
-        [node.id]: node
       }
-    }));
+    });
   }, 
 
   removeNode(nodeId: NodeId) {
