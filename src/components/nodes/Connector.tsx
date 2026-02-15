@@ -9,6 +9,7 @@ import useNodeContext from "../../hooks/useNodeContext"
 import useViewportContext from "../../hooks/useViewportContext"
 
 import Vec2 from "../../utils/Vec2"
+import { getElementCenter } from "../../utils/Elements"
 
 type ConnectorProps = {
   type: "data" | "flow",
@@ -18,6 +19,8 @@ type ConnectorProps = {
 }
 
 function Connector({ type, direction, name, description }: ConnectorProps) {
+  const isConnected = useEditorStore((state) => false);
+
   const drawnConnectionIdRef = useRef<string | null>(null);
   const connectorRef = useRef<SVGSVGElement | null>(null);
 
@@ -26,6 +29,7 @@ function Connector({ type, direction, name, description }: ConnectorProps) {
 
   const addConnection = useEditorStore((state) => state.addConnection);
   const updateConnection = useEditorStore((state) => state.updateConnection);
+  const removeConnection = useEditorStore((state) => state.removeConnection);
 
   const { handlers } = useDrag<HTMLDivElement>({ 
     onClick: handleConnectorClick,
@@ -36,14 +40,10 @@ function Connector({ type, direction, name, description }: ConnectorProps) {
   function handleConnectorClick() {
     if (!connectorRef.current) return;
 
+    const viewportParams = useEditorStore.getState().viewportParams;
+
     const connectionId = crypto.randomUUID();
-    
-    const connectorRect = connectorRef.current.getBoundingClientRect();
-    const connectorPos = new Vec2(connectorRect.x, connectorRect.y);
-    const connectorCenter = convertToViewportPos(connectorPos.add(new Vec2(
-      connectorRect.width / 2,
-      connectorRect.height / 2
-    )), useEditorStore.getState().viewportParams);
+    const connectorCenter = convertToViewportPos(getElementCenter(connectorRef.current), viewportParams)
 
     const connectors = [
       {
@@ -59,8 +59,6 @@ function Connector({ type, direction, name, description }: ConnectorProps) {
     ]
 
     if (direction === "input") connectors.reverse();
-
-    console.log(connectors);
     
     addConnection({
       id: connectionId,
@@ -78,22 +76,48 @@ function Connector({ type, direction, name, description }: ConnectorProps) {
     const currentPos = new Vec2(e.clientX, e.clientY);
     const currentViewportPos = convertToViewportPos(currentPos, useEditorStore.getState().viewportParams);
 
+    const connectorType = direction === "input" ? "inputConnector" : "outputConnector";
+
     updateConnection(drawnConnectionIdRef.current, (prev) => ({
       ...prev,
-      [direction === "input" ? "inputConnector" : "outputConnector"]: {
-        ...prev.outputConnector,
+      [connectorType]: {
+        ...prev[connectorType],
         pos: currentViewportPos
       }
     }));
   }
 
   function handleConnectorRelease(e: MouseEvent) {
+    if (!drawnConnectionIdRef.current) return;
+
+    const target = e.target as HTMLElement;
+    const connector = target.closest<HTMLElement>(".connector-wrapper");
+
+    if (connector) {
+      const viewportParams = useEditorStore.getState().viewportParams;
+      const connectorSvg = connector.querySelector("svg")!;
+      const connectorCenter = convertToViewportPos(getElementCenter(connectorSvg), viewportParams);
+
+      const connectorType = direction === "input" ? "inputConnector" : "outputConnector";
+
+      updateConnection(drawnConnectionIdRef.current, (prev) => ({
+        ...prev,
+        [connectorType]: {
+          nodeId: connector.dataset.nodeId,
+          name: connector.dataset.connectorName,
+          pos: connectorCenter
+        }
+      }));
+    } else {
+      removeConnection(drawnConnectionIdRef.current);
+    }
   }
 
   const connectorProps = {
+    "className": "connector-wrapper" ,
+    "data-node-id": nodeId,
     "data-connector-name": name,
     "data-connector-direction": direction,
-    "className": "connector"
   }
 
   const connectorStyle: React.CSSProperties = {
@@ -101,17 +125,20 @@ function Connector({ type, direction, name, description }: ConnectorProps) {
   }
 
   return (
-    <div className="connector-wrapper" {...handlers}>
+    <div 
+      {...connectorProps}
+      {...handlers}
+    >
       {direction === "output" && <span>{description}</span>}
       {type === "data" ? (
         <DataConnector 
-          {...connectorProps}
+          className={`connector ${isConnected ? "connected" : ""}`}
           style={connectorStyle}
           ref={connectorRef}
         />
       ) : ( 
         <FlowConnector 
-          {...connectorProps}
+          className={`connector ${isConnected ? "connected" : ""}`}
           style={connectorStyle}
           ref={connectorRef}
         /> 

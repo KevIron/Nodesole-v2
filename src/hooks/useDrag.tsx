@@ -6,6 +6,8 @@ type DragOptions = {
   onRelease?: (e: MouseEvent) => void,
 }
 
+// TODO: Apply a permanent fix over this hook by moving all interactions to a global event listener
+// and make an state machine like system out of them
 export default function useDrag<T = HTMLElement>({ onClick, onRelease, onMove }: DragOptions = {}) {
   const [isDragging, setIsDragging] = useState(false);
 

@@ -52,6 +52,10 @@
     height: 2.0rem;
 }
 
+.connector.connected {
+    fill: #cccccc;
+}
+
 /* Type specific node styling */
 
 .node__entry {
