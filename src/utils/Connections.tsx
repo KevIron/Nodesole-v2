@@ -15,7 +15,7 @@ export function smoothConnection(pos1: Vec2, pos2: Vec2, { reversed = false }: C
   const connectionLength = pos2.absoluteDistance(pos1);
   let cntOffset = connectionLength.x / 2;
 
-  if (pos2.x < pos1.x + 100) {
+  if (pos2.x < pos1.x + (connectionLength.y < 120 ? 60 : 120) && connectionLength.y > 20) {
     cntOffset = clamp(180, 600, cntOffset);
   }
 
