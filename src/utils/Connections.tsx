@@ -1,3 +1,4 @@
+import { clamp } from "./Math";
 import Vec2 from "./Vec2";
 
 export type ConnectionOptions = {
@@ -11,14 +12,19 @@ export function smoothConnection(pos1: Vec2, pos2: Vec2, { reversed = false }: C
     pos1 = temp;
   }
 
-  const connectionLenght = pos2.absoluteDistance(pos1);
+  const connectionLength = pos2.absoluteDistance(pos1);
+  let cntOffset = connectionLength.x / 2;
+
+  if (pos2.x < pos1.x + 100) {
+    cntOffset = clamp(180, 600, cntOffset);
+  }
 
   const cnt1 = new Vec2(
-    pos1.x + (connectionLenght.x / 2),
+    pos1.x + cntOffset,
     pos1.y
   );
   const cnt2 = new Vec2(
-    pos2.x - (connectionLenght.x / 2),
+    pos2.x - cntOffset,
     pos2.y
   );
   
