@@ -19,14 +19,13 @@ type ConnectorProps = {
 }
 
 function Connector({ type, direction, name, description }: ConnectorProps) {
-  const isConnected = useEditorStore((state) => false);
-
+  
   const drawnConnectionIdRef = useRef<string | null>(null);
   const connectorRef = useRef<SVGSVGElement | null>(null);
-
+  
   const { id: nodeId } = useNodeContext();
   const { convertToViewportPos } = useViewportContext();
-
+  
   const addConnection = useEditorStore((state) => state.addConnection);
   const updateConnection = useEditorStore((state) => state.updateConnection);
   const removeConnection = useEditorStore((state) => state.removeConnection);
@@ -63,8 +62,8 @@ function Connector({ type, direction, name, description }: ConnectorProps) {
     addConnection({
       id: connectionId,
       isVisible: true,
-      inputConnector: connectors[0],
-      outputConnector: connectors[1]
+      sourceConnector: connectors[0],
+      targetConnector: connectors[1]
     });
 
     drawnConnectionIdRef.current = connectionId;
@@ -76,7 +75,7 @@ function Connector({ type, direction, name, description }: ConnectorProps) {
     const currentPos = new Vec2(e.clientX, e.clientY);
     const currentViewportPos = convertToViewportPos(currentPos, useEditorStore.getState().viewportParams);
 
-    const connectorType = direction === "input" ? "inputConnector" : "outputConnector";
+    const connectorType = direction === "input" ? "sourceConnector" : "targetConnector";
 
     updateConnection(drawnConnectionIdRef.current, (prev) => ({
       ...prev,
@@ -98,7 +97,7 @@ function Connector({ type, direction, name, description }: ConnectorProps) {
       const connectorSvg = connector.querySelector("svg")!;
       const connectorCenter = convertToViewportPos(getElementCenter(connectorSvg), viewportParams);
 
-      const connectorType = direction === "input" ? "inputConnector" : "outputConnector";
+      const connectorType = direction === "input" ? "sourceConnector" : "targetConnector";
 
       updateConnection(drawnConnectionIdRef.current, (prev) => ({
         ...prev,
@@ -112,6 +111,14 @@ function Connector({ type, direction, name, description }: ConnectorProps) {
       removeConnection(drawnConnectionIdRef.current);
     }
   }
+
+  const isConnected = useEditorStore((state) => {
+    const inputNames = state.graph[nodeId].inputs.map(conn => state.connections[conn].targetConnector.name);
+    const outputNames = state.graph[nodeId].outputs.map(conn => state.connections[conn].sourceConnector.name);
+
+    const names = [...inputNames, ...outputNames];
+    return names.includes(name);
+  });
 
   const connectorProps = {
     "className": "connector-wrapper" ,

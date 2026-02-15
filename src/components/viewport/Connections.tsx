@@ -36,7 +36,7 @@ export default function Connections() {
       >
         <g name="connections-group" ref={groupRef}>
           {Object.values(connections).map(conn => (
-            <Connection key={conn.id} data={conn} />
+            <Connection key={conn.id} id={conn.id} />
           ))}
         </g>
       </svg>

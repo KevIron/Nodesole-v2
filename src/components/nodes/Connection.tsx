@@ -1,19 +1,21 @@
 import { memo } from "react";
 import { smoothConnection } from "../../utils/Connections";
-import type { ConnectionData } from "../../types/EditorTypes";
+import { useEditorStore } from "../../store/editorStore";
 
 type ConnectionProps = {
-  data: ConnectionData
+  id: string
 }
 
-function Connection({ data }: ConnectionProps) {
+function Connection({ id }: ConnectionProps) {
+  const data = useEditorStore((state) => state.connections[id]);
   const connectionPath = smoothConnection(
-    data.inputConnector.pos,
-    data.outputConnector.pos,
+    data.sourceConnector.pos,
+    data.targetConnector.pos,
   );
 
   const connectionStyle = {
-    stroke: "red",
+    stroke: "white",
+    strokeWidth: "2",
     fill: "transparent",
     visibility: data.isVisible ? "visible" : "hidden"
   } as React.CSSProperties

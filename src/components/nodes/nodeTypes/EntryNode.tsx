@@ -15,7 +15,7 @@ function EntryNode({ id }: NodeProps) {
       <Connector 
         type="flow"
         direction="output"
-        name="test"
+        name="test ENTRY"
       />
     </RegularNodeWrapper>
   );

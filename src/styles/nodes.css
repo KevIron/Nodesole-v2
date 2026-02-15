@@ -22,7 +22,7 @@
 .node__regular .node-body,
 .node__minimal .node-body {
     background-color: var(--bg-200);
-    color: var(--text-200);
+    color: var(--text-300);
     padding: 1.2rem;
 }
 
@@ -50,6 +50,9 @@
     display: block;
     width: 2.0rem;
     height: 2.0rem;
+
+    fill: var(--bg-200);
+    stroke: var(--text-100);
 }
 
 .connector.connected {

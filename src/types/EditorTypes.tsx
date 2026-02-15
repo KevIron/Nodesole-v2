@@ -34,6 +34,6 @@ type Connector = {
 export type ConnectionData = {
   id: string,
   isVisible: boolean,
-  inputConnector: Connector,
-  outputConnector: Connector,
+  sourceConnector: Connector,
+  targetConnector: Connector,
 }

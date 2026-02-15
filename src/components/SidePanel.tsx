@@ -3,7 +3,7 @@ import Vec2 from "../utils/Vec2";
 
 export default function SidePanel() {
   const addNode = useEditorStore((state) => state.addNode);
-  const connections = useEditorStore((state) => state.connections);
+  const connections = useEditorStore((state) => state);
 
   function handleAddEntryNode() {
     addNode({
@@ -31,7 +31,7 @@ export default function SidePanel() {
       <button onClick={handleAddEndNode}>Add end node</button>
       <button onClick={handleAddEntryNode}>Add entry node</button>
 
-      <textarea value={JSON.stringify(connections)}>
+      <textarea value={JSON.stringify(connections)} readOnly>
 
       </textarea>
     </aside>

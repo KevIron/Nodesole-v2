@@ -6,20 +6,26 @@ import type { ViewportParams } from "../contexts/ViewportContext";
 
 type EditorStateUpdater<T, K = T> = (prev: T) => K;
 
+type NodeId = string;
+type ConnectionId = string;
+
 export const useEditorStore = create<{
   viewportParams: ViewportParams,
 
-  graph: Record<string, Array<{ nodeId: string, connId: string }>>
+  graph: Record<NodeId, { 
+    inputs: Array<ConnectionId>, 
+    outputs: Array<ConnectionId> 
+  }>,
   nodes: Record<string, NodeData<NodeTypes>>,
   connections: Record<string, ConnectionData>,
 
   addConnection: (data: ConnectionData) => void,
-  removeConnection: (connId: string) => void,
-  updateConnection: (connId: string, updater: EditorStateUpdater<ConnectionData>) => void,
+  removeConnection: (connId: ConnectionId) => void,
+  updateConnection: (connId: ConnectionId, updater: EditorStateUpdater<ConnectionData>) => void,
 
   addNode: <T extends NodeTypes>(node: NodeData<T>) => void,
-  removeNode: (nodeId: string) => void,
-  updateNodePosition: (nodeId: string, updater: EditorStateUpdater<ViewportParams, Vec2>) => void
+  removeNode: (nodeId: NodeId) => void,
+  updateNodePosition: (nodeId: NodeId, updater: EditorStateUpdater<ViewportParams, Vec2>) => void
 
   updateViewportParams: (updater: EditorStateUpdater<ViewportParams>) => void
 }>((set) => ({
@@ -36,7 +42,10 @@ export const useEditorStore = create<{
     set(prev => ({
       graph: {
         ...prev.graph,
-        [node.id]: []
+        [node.id]: {
+          inputs: [],
+          outputs: []
+        }
       },
       nodes: {
         ...prev.nodes,
@@ -45,43 +54,79 @@ export const useEditorStore = create<{
     }));
   }, 
 
-  removeNode(nodeId: string) {
+  removeNode(nodeId: NodeId) {
     set(prev => {
-      const { [nodeId]: _, ...nodes } = prev.nodes;
-      const { [nodeId]: __, ...graph } = prev.graph;
+      const nodes = { ...prev.nodes };
+      const graph = { ...prev.graph };
+      const connections = { ...prev.connections };
 
-      return { nodes, graph };
+      const deletedNodeConnections = graph[nodeId];
+
+      for (const connectionId of deletedNodeConnections.inputs) {
+        const deletedConnection = connections[connectionId];
+        const sourceNodeId = deletedConnection.sourceConnector.nodeId;
+
+        if (sourceNodeId) {
+          graph[sourceNodeId] = {
+            ...graph[sourceNodeId],
+            outputs: graph[sourceNodeId].outputs.filter(id => id !== connectionId)
+          }
+        }
+
+        delete connections[connectionId];
+      }
+
+      for (const connectionId of deletedNodeConnections.outputs) {
+        const deletedConnection = connections[connectionId];
+        const targetNodeId = deletedConnection.targetConnector.nodeId;
+
+        if (targetNodeId) {
+          graph[targetNodeId] = {
+            ...graph[targetNodeId],
+            inputs: graph[targetNodeId].inputs.filter(id => id !== connectionId)
+          }
+        }
+
+
+        delete connections[connectionId];
+      }
+
+      delete graph[nodeId];
+      delete nodes[nodeId];
+
+      return { nodes, graph }
     });
   },
 
-  updateViewportParams(callback: (prevParams: ViewportParams) => ViewportParams) {
-    set(prev => ({
-      viewportParams: callback(prev.viewportParams)
-    }));
-  },
-
-  updateNodePosition(nodeId: string, callback: (prevParams: ViewportParams) => Vec2) {
+  updateNodePosition(nodeId: NodeId, callback: (prevParams: ViewportParams) => Vec2) {
     set(prev => {
       const oldNodePos = prev.nodes[nodeId].data.pos;
       const newNodePos = callback(prev.viewportParams);
+
       const delta = newNodePos.subtract(oldNodePos);
 
-      const nodeConnections = prev.graph[nodeId].map(el => el.connId);
       const connections = { ...prev.connections };
+      const nodeConnections = prev.graph[nodeId];
 
-      nodeConnections.forEach((connId) => {
-        connections[connId] = {
-          ...connections[connId],
-          inputConnector: {
-            ...connections[connId].inputConnector,
-            pos: connections[connId].inputConnector.pos.add(delta)
-          },
-          outputConnector: {
-            ...connections[connId].outputConnector,
-            pos: connections[connId].outputConnector.pos.add(delta)
+      for (const connectionId of nodeConnections.inputs) {
+        connections[connectionId] = {
+          ...connections[connectionId],
+          targetConnector: {
+            ...connections[connectionId].targetConnector,
+            pos: connections[connectionId].targetConnector.pos.add(delta)
           }
         }
-      });
+      }
+
+      for (const connectionId of nodeConnections.outputs) {
+        connections[connectionId] = {
+          ...connections[connectionId],
+          sourceConnector: {
+            ...connections[connectionId].sourceConnector,
+            pos: connections[connectionId].sourceConnector.pos.add(delta)
+          }
+        }
+      }
 
       const nodes = {
         ...prev.nodes,
@@ -100,44 +145,121 @@ export const useEditorStore = create<{
 
   addConnection(data: ConnectionData) {
     set(prev => {
-      const connections = {
-        ...prev.connections,
-        [data.id]: data
+      const connectionId = data.id;
+
+      const sourceNodeId = data.sourceConnector.nodeId;
+      const targeNodeId = data.targetConnector.nodeId;
+
+      const mutatedGraph = { ...prev.graph };
+
+      if (sourceNodeId) {
+        mutatedGraph[sourceNodeId] = {
+          ...mutatedGraph[sourceNodeId],
+          outputs: [ ...mutatedGraph[sourceNodeId].outputs, connectionId ],
+        }
       }
 
-      const graph = {
-        ...prev.graph
+      if (targeNodeId) {
+        mutatedGraph[targeNodeId] = {
+          ...mutatedGraph[targeNodeId],
+          inputs: [ ...mutatedGraph[targeNodeId].inputs, connectionId ],
+        }
       }
 
-      if (data.inputConnector.nodeId !== null)
-      //if (da[1]) graph[nodeIds[1]] = graph[nodeIds[1]].filter(el => el.connId !== connId);
-
-       
-
-      return { connections, graph }      
+      return {
+        graph: mutatedGraph,
+        connections: {
+          ...prev.connections,
+          [connectionId]: data
+        }
+      }
     });
   },
 
-  removeConnection(connId: string) {
+  removeConnection(connId: ConnectionId) {
     set(prev => {
-      const { [connId]: removedConnection, ...connections } = prev.connections;
-      const nodeIds = [removedConnection.inputConnector.nodeId, removedConnection.outputConnector.nodeId];
+      const { [connId]: removedConnection , ...connections }  = { ...prev.connections };
 
       const graph = { ...prev.graph };
 
-      if (nodeIds[0]) graph[nodeIds[0]] = graph[nodeIds[0]].filter(el => el.connId !== connId);
-      if (nodeIds[1]) graph[nodeIds[1]] = graph[nodeIds[1]].filter(el => el.connId !== connId);
+      const sourceNodeId = removedConnection.sourceConnector.nodeId;
+      const targetNodeId = removedConnection.targetConnector.nodeId;
+      
+      if (sourceNodeId) {
+        graph[sourceNodeId] = {
+          ...graph[sourceNodeId],
+          outputs: graph[sourceNodeId].outputs.filter(conn => conn !== connId)
+        }
+      }
 
+      if (targetNodeId) {
+        graph[targetNodeId] = {
+          ...graph[targetNodeId],
+          inputs: graph[targetNodeId].inputs.filter(conn => conn !== connId)
+        }
+      }
+      
       return { connections, graph }
     });
   },
 
-  updateConnection(connId: string, updater: EditorStateUpdater<ConnectionData>) {
-    set(prev => ({
-      connections: {
-        ...prev.connections,
-        [connId]: updater(prev.connections[connId])
+  updateConnection(connId: ConnectionId, updater: EditorStateUpdater<ConnectionData>) {
+    set(prev => {
+      const oldConnectionData = prev.connections[connId];
+      const newConnectionData = updater(oldConnectionData);
+
+      if (newConnectionData.id !== connId) throw new Error("Connection id cannot be changed!");
+
+      const [oldSourceNodeId, newSourceNodeId] = [ oldConnectionData.sourceConnector.nodeId, newConnectionData.sourceConnector.nodeId ];
+      const [oldTargetNodeId, newTargetNodeId] = [ oldConnectionData.targetConnector.nodeId, newConnectionData.targetConnector.nodeId ];
+
+      const modifiedGraph = { ...prev.graph };
+
+      if (oldSourceNodeId !== newSourceNodeId) {
+        if (oldSourceNodeId) {
+          modifiedGraph[oldSourceNodeId] = {
+            ...modifiedGraph[oldSourceNodeId],
+            outputs: modifiedGraph[oldSourceNodeId].outputs.filter(id => id !== connId)
+          }
+        }
+
+        if (newSourceNodeId) {
+          modifiedGraph[newSourceNodeId] = {
+            ...modifiedGraph[newSourceNodeId],
+            outputs: [ ...modifiedGraph[newSourceNodeId].outputs, connId ]
+          }
+        }
       }
+
+      if (oldTargetNodeId !== newTargetNodeId) {
+        if (oldTargetNodeId) {
+          modifiedGraph[oldTargetNodeId] = {
+            ...modifiedGraph[oldTargetNodeId],
+            inputs: modifiedGraph[oldTargetNodeId].inputs.filter(id => id !== connId)
+          }
+        }
+
+        if (newTargetNodeId) {
+          modifiedGraph[newTargetNodeId] = {
+            ...modifiedGraph[newTargetNodeId],
+            inputs: [ ...modifiedGraph[newTargetNodeId].inputs, connId ]
+          }
+        }
+      }
+
+      return {
+        graph: modifiedGraph,
+        connections: {
+          ...prev.connections,
+          [connId]: newConnectionData
+        }
+      }
+    });
+  },
+
+  updateViewportParams(callback: (prevParams: ViewportParams) => ViewportParams) {
+    set(prev => ({
+      viewportParams: callback(prev.viewportParams)
     }));
   }
 }));

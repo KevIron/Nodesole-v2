@@ -15,7 +15,7 @@ function EndNode({ id }: NodeProps) {
       <Connector 
         type="flow"
         direction="input"
-        name="test"
+        name="test END"
       />
     </RegularNodeWrapper>
   );
