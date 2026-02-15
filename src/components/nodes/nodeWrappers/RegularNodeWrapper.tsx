@@ -1,3 +1,4 @@
+import { memo } from "react";
 import NodeWrapper from "./NodeWrapper";
 
 type RegularNodeWrapperProps = React.PropsWithChildren<React.ComponentProps<"div">> & {
@@ -6,7 +7,7 @@ type RegularNodeWrapperProps = React.PropsWithChildren<React.ComponentProps<"div
   nodeId: string
 }
 
-export default function RegularNodeWrapper({ nodeId, title, children, className, color, ...props }: RegularNodeWrapperProps) {
+function RegularNodeWrapper({ nodeId, title, children, className, color, ...props }: RegularNodeWrapperProps) {
   return (
     <NodeWrapper 
       nodeId={nodeId}
@@ -21,3 +22,5 @@ export default function RegularNodeWrapper({ nodeId, title, children, className,
     </NodeWrapper>
   );
 }
+
+export default memo(RegularNodeWrapper);

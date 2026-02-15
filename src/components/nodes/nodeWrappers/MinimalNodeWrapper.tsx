@@ -1,3 +1,4 @@
+import { memo } from "react";
 import NodeWrapper from "./NodeWrapper";
 
 type MinimalNodeWrapperProps = React.PropsWithChildren<React.ComponentProps<"div">> & {
@@ -5,7 +6,7 @@ type MinimalNodeWrapperProps = React.PropsWithChildren<React.ComponentProps<"div
   nodeId: string
 };
 
-export default function MinimalNodeWrapper({ nodeId, className, color, children, ...props }: MinimalNodeWrapperProps) {
+function MinimalNodeWrapper({ nodeId, className, color, children, ...props }: MinimalNodeWrapperProps) {
   return (
     <NodeWrapper 
       nodeId={nodeId}
@@ -19,3 +20,5 @@ export default function MinimalNodeWrapper({ nodeId, className, color, children,
     </NodeWrapper>
   );
 }
+
+export default memo(MinimalNodeWrapper);

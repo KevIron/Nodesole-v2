@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { memo, useRef } from "react";
 import Vec2 from "../../../utils/Vec2";
 import useDrag from "../../../hooks/useDrag";
 import useViewportContext from "../../../hooks/useViewportContext";
@@ -14,7 +14,7 @@ function createNodeTransform(pos: Vec2) {
   return `translate(${pos.x}px, ${pos.y}px)`;
 }
 
-export default function NodeWrapper({ nodeId, className, style, color, children, ...props }: NodeWrapperProps) { 
+function NodeWrapper({ nodeId, className, style, color, children, ...props }: NodeWrapperProps) { 
   const nodePosition = useEditorStore((state) => state.nodes[nodeId].data.pos);
   const updateNodePosition = useEditorStore((state) => state.updateNodePosition);
 
@@ -79,3 +79,5 @@ export default function NodeWrapper({ nodeId, className, style, color, children,
     </NodeContext>
   );
 }
+
+export default memo(NodeWrapper);

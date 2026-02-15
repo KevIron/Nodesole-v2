@@ -1,14 +1,15 @@
-import type { ConnectionData } from "../../types/EditorTypes";
+import { memo } from "react";
 import { smoothConnection } from "../../utils/Connections";
+import type { ConnectionData } from "../../types/EditorTypes";
 
 type ConnectionProps = {
   data: ConnectionData
 }
 
-export default function Connection({ data }: ConnectionProps) {
+function Connection({ data }: ConnectionProps) {
   const connectionPath = smoothConnection(
     data.inputConnector.pos,
-    data.outputConnector.pos
+    data.outputConnector.pos,
   );
 
   const connectionStyle = {
@@ -24,3 +25,5 @@ export default function Connection({ data }: ConnectionProps) {
     />
   );
 }
+
+export default memo(Connection);

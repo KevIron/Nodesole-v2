@@ -1,14 +1,13 @@
+import { memo } from "react";
 import type { NodeProps } from "../../../types/EditorTypes";
 import { NODE_COLORS } from "../../../utils/NodeColors";
 import Connector from "../Connector";
 import RegularNodeWrapper from "../nodeWrappers/RegularNodeWrapper";
 
-export default function EndNode({ data }: NodeProps<"END_NODE">) {
-  
-
+function EndNode({ id }: NodeProps) {
   return (
     <RegularNodeWrapper
-      nodeId={data.id} 
+      nodeId={id} 
       className="node__end"  
       title="End Point"
       color={NODE_COLORS.NODE_END}
@@ -21,3 +20,5 @@ export default function EndNode({ data }: NodeProps<"END_NODE">) {
     </RegularNodeWrapper>
   );
 }
+
+export default memo(EndNode);

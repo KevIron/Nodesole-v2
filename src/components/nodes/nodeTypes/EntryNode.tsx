@@ -1,12 +1,13 @@
+import { memo } from "react";
 import type { NodeProps } from "../../../types/EditorTypes";
 import { NODE_COLORS } from "../../../utils/NodeColors";
 import Connector from "../Connector";
 import RegularNodeWrapper from "../nodeWrappers/RegularNodeWrapper";
 
-export default function EntryNode({ data }: NodeProps<"ENTRY_NODE">) {
+function EntryNode({ id }: NodeProps) {
   return (
     <RegularNodeWrapper 
-      nodeId={data.id}
+      nodeId={id}
       className="node__entry"  
       title="Entry Point"
       color={NODE_COLORS.NODE_ENTRY}
@@ -19,3 +20,5 @@ export default function EntryNode({ data }: NodeProps<"ENTRY_NODE">) {
     </RegularNodeWrapper>
   );
 }
+
+export default memo(EntryNode);
