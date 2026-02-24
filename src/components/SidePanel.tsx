@@ -1,3 +1,4 @@
+// import { useEffect } from "react";
 import { useEditorStore } from "../store/editorStore";
 import Vec2 from "../utils/Vec2";
 
@@ -23,6 +24,10 @@ export default function SidePanel() {
       }
     });
   }
+
+  // useEffect(() => {
+  //   for (let i = 0; i < 5000; ++i) handleAddEndNode();
+  // });
 
   return (
     <aside id="side-panel">

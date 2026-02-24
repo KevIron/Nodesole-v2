@@ -1,7 +1,6 @@
 import { useEditorStore } from "../../store/editorStore";
-import createNodeComponent from "../../utils/NodeFactory";
-
 import type { ViewportParams } from "../../contexts/ViewportContext";
+import NodesContainer from "./NodesContainer";
 
 function createViewportTransform(params: ViewportParams) {
   const translate = `translate3d(${params.offset.x}px, ${params.offset.y}px, 0px)`;
@@ -12,7 +11,6 @@ function createViewportTransform(params: ViewportParams) {
 
 export default function Workspace() {
   const viewportParams = useEditorStore((state) => state.viewportParams)
-  const nodes = useEditorStore((state) => state.nodes);
 
   const workspaceStyle = {
     transform: createViewportTransform(viewportParams)
@@ -20,7 +18,7 @@ export default function Workspace() {
 
   return (
     <div className="viewport-workspace" style={workspaceStyle}>
-      {Object.values(nodes).map(node => createNodeComponent(node))}
+      <NodesContainer />
     </div>
   )
 }

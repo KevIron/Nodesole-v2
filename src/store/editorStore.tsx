@@ -16,6 +16,7 @@ export const useEditorStore = create<{
     inputs: Array<ConnectionId>, 
     outputs: Array<ConnectionId> 
   }>,
+  nodeIds: string[]
   nodes: Record<string, NodeData<NodeTypes>>,
   connections: Record<string, ConnectionData>,
 
@@ -35,6 +36,7 @@ export const useEditorStore = create<{
   },
 
   graph: {},
+  nodeIds: [],
   nodes: {},
   connections: {},
 
@@ -50,7 +52,8 @@ export const useEditorStore = create<{
       nodes: {
         ...prev.nodes,
         [node.id]: node
-      }
+      },
+      nodeIds: [ ...prev.nodeIds, node.id ]
     }));
   }, 
 
@@ -94,7 +97,7 @@ export const useEditorStore = create<{
       delete graph[nodeId];
       delete nodes[nodeId];
 
-      return { nodes, graph }
+      return { nodes, graph, nodeIds: prev.nodeIds.filter(id => id != nodeId) }
     });
   },
 
