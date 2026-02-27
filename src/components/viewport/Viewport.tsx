@@ -5,7 +5,7 @@ import Grid from "./Grid";
 import Workspace from "./Workspace";
 import Connections from "./Connections";
 
-import { ViewportContext, type ViewportParams } from "../../contexts/ViewportContext";
+import { ViewportContext, type ViewportParams } from "../../contexts/viewportContext";
 
 export default function Viewport() {
   const viewportRef = useRef<HTMLDivElement | null>(null);

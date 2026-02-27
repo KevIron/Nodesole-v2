@@ -1,5 +1,5 @@
 import { useContext } from "react"
-import { ViewportContext } from "../contexts/ViewportContext";
+import { ViewportContext } from "../contexts/viewportContext";
 
 export default function useViewportContext() {
   const viewportContext = useContext(ViewportContext);
