@@ -9,7 +9,8 @@ type NodeDataBase = {
 export type NodeDataTypesMap = {
   "ENTRY_NODE": NodeDataBase,
   "END_NODE": NodeDataBase,
-  "CONDITION_NODE": NodeDataBase
+  "CONDITION_NODE": NodeDataBase,
+  "CONSTANT_EMITTER_NODE": NodeDataBase
 }
 
 export type NodeTypes = keyof NodeDataTypesMap;

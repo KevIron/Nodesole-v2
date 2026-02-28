@@ -40,6 +40,15 @@ export default function SidePanel() {
         })}>
           Add condition node
         </button>
+        <button onClick={() => handleAddNode({
+          id: crypto.randomUUID(),
+          type: "CONSTANT_EMITTER_NODE",
+          data: {
+            pos: new Vec2(0, 0)
+          }
+        })}>
+          Add emitter node
+        </button>
       </div>
     </aside>
   );
