@@ -6,11 +6,16 @@ type NodeDataBase = {
   pos: Vec2
 };
 
+type ConstantEmitterData = NodeDataBase & {
+  type: "string" | "boolean" | "number", 
+  value: string
+}
+
 export type NodeDataTypesMap = {
   "ENTRY_NODE": NodeDataBase,
   "END_NODE": NodeDataBase,
   "CONDITION_NODE": NodeDataBase,
-  "CONSTANT_EMITTER_NODE": NodeDataBase
+  "CONSTANT_EMITTER_NODE": ConstantEmitterData
 }
 
 export type NodeTypes = keyof NodeDataTypesMap;

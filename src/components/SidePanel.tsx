@@ -44,7 +44,9 @@ export default function SidePanel() {
           id: crypto.randomUUID(),
           type: "CONSTANT_EMITTER_NODE",
           data: {
-            pos: new Vec2(0, 0)
+            pos: new Vec2(0, 0),
+            type: "string", 
+            value: ""
           }
         })}>
           Add emitter node

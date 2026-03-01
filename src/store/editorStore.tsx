@@ -25,7 +25,8 @@ export const useEditorStore = create<{
 
   addNode: <T extends NodeTypes>(node: NodeData<T>) => void,
   removeNode: (nodeId: NodeId) => void,
-  updateNodePosition: (nodeId: NodeId, updater: EditorStateUpdater<ViewportParams, Vec2>) => void
+  updateNodePosition: (nodeId: NodeId, updater: EditorStateUpdater<ViewportParams, Vec2>) => void,
+  updateNodeData: (nodeId: NodeId, updater: EditorStateUpdater<NodeData<NodeTypes>["data"]>) => void,
 
   updateViewportParams: (updater: EditorStateUpdater<ViewportParams>) => void
 }>((set) => ({
@@ -146,6 +147,18 @@ export const useEditorStore = create<{
 
       return { connections, nodes }
     });
+  },
+
+  updateNodeData(nodeId: NodeId, updater: EditorStateUpdater<NodeData<NodeTypes>["data"]>) {
+    set((prev) => ({
+      nodes: {
+        ...prev.nodes,
+        [nodeId]: {
+          ...prev.nodes[nodeId],
+          data: updater(prev.nodes[nodeId].data)
+        }
+      }
+    }))
   },
 
   addConnection(data: ConnectionData) {

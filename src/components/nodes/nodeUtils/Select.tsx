@@ -1,16 +1,17 @@
-import React, { useEffect, useRef, useState } from "react"
-import DropdownIcon from "./../../../assets/icons/dropdown_icon.svg?react"
+import React, { useRef, useState } from "react"
 
-type SelectProps = React.ComponentProps<"div"> & {
+import DropdownIcon from "./../../../assets/icons/dropdown_icon.svg?react"
+import useDocumentEvent from "../../../hooks/useDocumentEvent";
+
+type SelectProps = Omit<React.ComponentProps<"div">, "onChange"> & {
   label?: string,
   options: string[],
-  value?: string,
+  selectedItem: string,
+  onChange: (e: { newValue: string, oldValue: string }) => void 
 }
 
-export default function Select({ label, options, value, ...props }: SelectProps) {
+export default function Select({ label, options, selectedItem, onChange, ...props }: SelectProps) {
   const [isDropdownActive, setDropdownActive] = useState(false);
-  const [selectedItem, setSelectedItem] = useState(value);
-
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
   function handleShowDropdown(e: React.MouseEvent) {
@@ -20,30 +21,17 @@ export default function Select({ label, options, value, ...props }: SelectProps)
 
   function handleSelectItem(e: React.MouseEvent, item: string) {
     e.stopPropagation();
-
-    setSelectedItem(item);
-    setDropdownActive(false);
+    onChange({ oldValue: selectedItem, newValue: item });
   }
 
-  useEffect(() => {
-    setSelectedItem(value);
-  }, [value]);
+  useDocumentEvent("mousedown", (e: MouseEvent) => {
+    const target = e.target as HTMLElement;
 
-  useEffect(() => {
-    if (!isDropdownActive) return;
-
-    function handleOutsideClick(e: MouseEvent) {
-      const target = e.target as HTMLElement;
-
-      if (!dropdownRef.current?.contains(target)) {
-        e.preventDefault();
-        setDropdownActive(false);
-      }
+    if (!dropdownRef.current?.contains(target) || dropdownRef.current !== target) {
+      e.preventDefault();
+      setDropdownActive(false);
     }
-
-    document.addEventListener("mousedown", handleOutsideClick, true);
-    return () => document.removeEventListener("mousedown", handleOutsideClick, true);
-  }, [isDropdownActive]); 
+  }, { capture: true, attached: isDropdownActive });
 
   return (
     <div className="node-select" {...props}>

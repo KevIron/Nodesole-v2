@@ -1,60 +1,47 @@
 import React, { useEffect, useRef, useState } from "react";
+import useDocumentEvent from "../../../hooks/useDocumentEvent";
 
-type InputProps = React.ComponentProps<"input"> & {
+type InputProps = Omit<React.ComponentProps<"input">, "onChange" | "onMouseDown"> & {
   label?: string,
-  onInput?: (e: React.InputEvent) => void
+  value: string,
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void, 
+  onMouseDown?: (e: React.MouseEvent<HTMLInputElement>) => void
 }
 
-export default function Input({ label, onInput, ...props }: InputProps) {
-  const [value, setValue] = useState("");
+export default function Input({ id, label, value, onChange, onMouseDown, ...props }: InputProps) {
   const [isDisplayShown, setDisplayShown] = useState(false);
-
   const inputRef = useRef<HTMLInputElement | null>(null);
 
-  function handleClick(e: React.MouseEvent) {
+  function handleClick(e: React.MouseEvent<HTMLInputElement>) {
     e.stopPropagation();
+    onMouseDown?.(e);
   }
 
-  function handleInput(e: React.InputEvent) {
-    if (!inputRef.current) return;
+  useDocumentEvent("mousedown", (e: MouseEvent) => {
+    const target = e.target as HTMLElement;
 
-    setValue(inputRef.current.value);
+    if (!inputRef.current?.contains(target) || inputRef.current !== target) {
+      setDisplayShown(false);
+    }
+  }, { capture: true, attached: isDisplayShown });
+
+  useEffect(() => {
+    if (!inputRef.current) return;
 
     const width = inputRef.current.clientWidth;
     const scrollWidth = inputRef.current.scrollWidth;
 
-    if (scrollWidth > width) {
-      setDisplayShown(true);
-    } else {
-      setDisplayShown(false);
-    }
-
-    onInput?.(e);
-  }
-
-  useEffect(() => {
-    if (!isDisplayShown) return;
-
-    function handleOutsideClick(e: MouseEvent) {
-      const target = e.target as HTMLElement;
-
-      if (!inputRef.current?.contains(target)) {
-        setDisplayShown(false);
-      }
-    }
-
-    document.addEventListener("mousedown", handleOutsideClick, true);
-    return () => document.removeEventListener("mousedown", handleOutsideClick, true);
-  }, [isDisplayShown]); 
+    setDisplayShown(scrollWidth > width);
+  }, [value]);
 
   return (
     <div className="node-input">
-      {label !== undefined && <label>{label}</label> }
+      {label !== undefined && <label htmlFor={id}>{label}</label> }
       <div className="input-wrapper">
         <input
           ref={inputRef}
           onMouseDown={handleClick}
-          onInput={handleInput}
+          onChange={onChange}
           value={value}
           {...props}
         />
