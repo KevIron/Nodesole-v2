@@ -9,9 +9,7 @@
     left: 0;
 
     pointer-events: all;
-    
     border-radius: 5px;
-    overflow: hidden;
 }
 
 .node__regular,
@@ -59,6 +57,108 @@
     fill: #cccccc;
 }
 
+.node-input,
+.node-select {
+    display: flex;
+    gap: 0.4rem;
+    height: 3rem;
+}
+
+.node-input {
+    .input-wrapper {
+        position: relative;
+    }
+
+    input {
+        border: 1px solid var(--text-100);
+        border-radius: 3px;
+        background-color: transparent;
+        color: inherit;
+        width: 100%;
+        padding: 0.2rem;
+        font-size: inherit;
+    }
+
+    input:focus,
+    input:focus-within {
+        outline: none;
+    }
+
+    .text-display {
+        position: absolute;
+        border: 1px dashed var(--text-100);
+        border-radius: 3px;
+        background-color: var(--bg-200);
+        word-wrap: break-word;
+        width: 150%;
+        left: 150%;
+    }
+}
+
+.node-select {
+    .select-outer {
+        border: 1px solid var(--text-100);
+        border-radius: 3px;
+        background-color: transparent;
+        width: 100%;
+        cursor: pointer;
+        padding: 0.2rem;
+        position: relative;
+    }
+
+    .select-inner {
+        width: calc(100% + 2px);
+        
+        position: absolute;
+        top: 100%;
+        left: -1px;
+        z-index: 1;
+
+        visibility: hidden;
+        overflow: hidden;
+    }
+
+    .select-inner span {
+        display: block;
+        padding: 0.4rem 0.2rem;
+        background-color: var(--bg-200);
+        border-inline: 1px solid var(--text-100);
+
+        transform: translateY(-100%);
+        transition: all 60ms;
+    }
+
+    .select-inner span:last-child {
+        border-bottom: 1px solid var(--text-100);
+        border-radius: 0px 0px 3px 3px;
+    }
+
+    .select-inner span:first-child {
+        border-top: 1px solid var(--text-100);
+        border-radius: 3px 3px 0px 0px ;
+    }
+
+    .select-inner.active {
+        visibility: visible;
+        transform: translate(0);
+    }
+
+    .select-inner.active span {
+        transform: translateY(0);
+    }
+
+    .select-display {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .select-display svg {
+        height: 2.4rem;
+        aspect-ratio: 1 / 1;
+    }
+}
+
 /* Type specific node styling */
 
 .node__entry {
@@ -95,5 +195,20 @@
 
     .output-connectors .connector-wrapper {
         justify-content: flex-end;
+    }
+}
+
+.node__constant-emitter {
+    .node-body {
+        display: grid;
+        grid-template-columns: 1fr min-content;
+        flex-direction: column;
+        row-gap: 0.6rem;
+        column-gap: 0.2rem;
+
+        .node-input,
+        .node-select {
+            grid-column: 1;
+        }
     }
 }

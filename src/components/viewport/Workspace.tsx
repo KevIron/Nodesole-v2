@@ -1,4 +1,4 @@
-import type { ViewportParams } from "../../contexts/viewportContext";
+import type { ViewportParams } from "../../contexts/ViewportContext";
 import { useEditorStore } from "../../store/editorStore";
 import createNodeComponent from "../../utils/NodeFactory";
 
