@@ -5,11 +5,7 @@ import { NODE_COLORS } from "../../../utils/NodeColors";
 import { useEditorStore } from "../../../store/editorStore";
 import Connector from "../Connector";
 
-type OperatorNodeProps = NodeProps & {
-
-}
-
-function OperatorNode({ id }: OperatorNodeProps) {
+function OperatorNode({ id }: NodeProps) {
   const nodeData = useEditorStore((state) => state.nodes[id].data) as NodeDataTypesMap["OPERATOR_NODE"];
 
   let operatorSign = "";
