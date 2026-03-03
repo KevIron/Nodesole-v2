@@ -1,28 +1,14 @@
-// import { useEffect } from "react";
+import { useState } from "react";
 import { useEditorStore } from "../store/editorStore";
+import type { NodeData, NodeDataTypesMap, NodeTypes } from "../types/EditorTypes";
 import Vec2 from "../utils/Vec2";
 
 export default function SidePanel() {
   const addNode = useEditorStore((state) => state.addNode);
-  
-  function handleAddEntryNode() {
-    addNode({
-      id: crypto.randomUUID(),
-      type: "ENTRY_NODE",
-      data: {
-        pos: new Vec2(0, 0)
-      }
-    });
-  }
+  const [operatorOperation, setOperatorOperation] = useState<NodeDataTypesMap["OPERATOR_NODE"]["operation"]>("equal");
 
-  function handleAddEndNode() {
-    addNode({
-      id: crypto.randomUUID(),
-      type: "END_NODE",
-      data: {
-        pos: new Vec2(0, 0)
-      }
-    });
+  function handleAddNode<T extends NodeTypes>(data: NodeData<T>) {
+    addNode(data);
   }
 
   // useEffect(() => {
@@ -32,8 +18,63 @@ export default function SidePanel() {
   return (
     <aside id="side-panel">
       <h2>Development options:</h2>
-      <button onClick={handleAddEndNode}>Add end node</button>
-      <button onClick={handleAddEntryNode}>Add entry node</button>
+      <div className="dev-menu">
+        <button onClick={() => handleAddNode({
+          id: crypto.randomUUID(),
+          type: "ENTRY_NODE",
+          data: {
+            pos: new Vec2(0, 0)
+          }
+        })}>
+          Add end node
+        </button>
+        <button onClick={() => handleAddNode({
+          id: crypto.randomUUID(),
+          type: "END_NODE",
+          data: {
+            pos: new Vec2(0, 0)
+          }
+        })}>
+          Add entry node
+        </button>
+        <button onClick={() => handleAddNode({
+          id: crypto.randomUUID(),
+          type: "CONDITION_NODE",
+          data: {
+            pos: new Vec2(0, 0)
+          }
+        })}>
+          Add condition node
+        </button>
+        <button onClick={() => handleAddNode({
+          id: crypto.randomUUID(),
+          type: "CONSTANT_EMITTER_NODE",
+          data: {
+            pos: new Vec2(0, 0),
+            type: "string", 
+            value: ""
+          }
+        })}>
+          Add emitter node
+        </button>
+        <div className="operator-addition">
+          <button onClick={() => handleAddNode({
+            id: crypto.randomUUID(),
+            type: "OPERATOR_NODE",
+            data: {
+              pos: new Vec2(0, 0),
+              operation: operatorOperation
+            }
+          })}>
+            Add operator node
+          </button>
+          <select onChange={(e) => setOperatorOperation(e.target.value as NodeDataTypesMap["OPERATOR_NODE"]["operation"])} value={operatorOperation}>
+            <option value="equal">EQ</option>
+            <option value="greaterThan">GT</option>
+            <option value="lessThan">LT</option>
+          </select>
+        </div>
+      </div>
     </aside>
   );
 }

@@ -9,9 +9,7 @@
     left: 0;
 
     pointer-events: all;
-    
     border-radius: 5px;
-    overflow: hidden;
 }
 
 .node__regular,
@@ -44,6 +42,7 @@
     align-items: center;
     justify-content: center;
     gap: 0.4rem;
+    color: var(--text-400);
 }
 
 .connector {
@@ -59,6 +58,125 @@
     fill: #cccccc;
 }
 
+.node-input,
+.node-select {
+    display: flex;
+    gap: 0.4rem;
+    height: 3rem;
+    width: 20rem;
+}
+
+.node-input {
+    .input-wrapper {
+        position: relative;
+    }
+
+    input {
+        border: 1px solid var(--text-100);
+        border-radius: 3px;
+        background-color: transparent;
+        color: inherit;
+        width: 100%;
+        height: 100%;
+        padding: 0.2rem;
+        font-size: inherit;
+        font-family: inherit;
+    }
+
+    input:focus,
+    input:focus-within {
+        outline: none;
+    }
+
+    .text-display,
+    .text-display-connector {
+        position: absolute;
+    }
+
+    .text-display {
+        border: 1px dashed var(--text-100);
+        border-radius: 3px;
+        background-color: var(--bg-200);
+        word-wrap: break-word;
+        width: 150%;
+        left: 150%;
+        padding: 0.4rem;
+    }
+
+    .text-display-connector {
+        top: 0;
+        right: -100%;
+    }
+}
+
+.node-select {
+    .select-outer {
+        border: 1px solid var(--text-100);
+        border-radius: 3px;
+        background-color: transparent;
+        width: 100%;
+        cursor: pointer;
+        padding: 0.2rem;
+        position: relative;
+    }
+
+    .select-inner {
+        width: calc(100% + 2px);
+        
+        position: absolute;
+        top: 100%;
+        left: -1px;
+        z-index: 1;
+
+        visibility: hidden;
+        overflow: hidden;
+    }
+
+    .select-inner span {
+        display: block;
+        padding: 0.4rem 0.2rem;
+        background-color: var(--bg-200);
+        border-inline: 1px solid var(--text-100);
+
+        transform: translateY(-100%);
+        transition: all 60ms;
+    }
+
+    .select-inner span:last-child {
+        border-bottom: 1px solid var(--text-100);
+        border-radius: 0px 0px 3px 3px;
+    }
+
+    .select-inner span:first-child {
+        border-top: 1px solid var(--text-100);
+        border-radius: 3px 3px 0px 0px ;
+    }
+
+    .select-inner.active {
+        visibility: visible;
+        transform: translate(0);
+    }
+
+    .select-inner.active span {
+        transform: translateY(0);
+    }
+
+    .select-display {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .select-display span {
+        min-width: 0;
+    }
+
+    .select-display svg {
+        height: 2.4rem;
+        aspect-ratio: 1 / 1;
+    }
+}
+
 /* Type specific node styling */
 
 .node__entry {
@@ -72,5 +190,81 @@
     .node-body {
         display: flex;
         justify-content: flex-start;
+    }
+}
+
+.node__condition {
+    .node-body {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        justify-content: space-between;
+    }
+
+    .input-connectors,
+    .output-connectors {
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+    }
+
+    .input-connectors .connector-wrapper {
+        justify-content: flex-start;
+    }
+
+    .output-connectors .connector-wrapper {
+        justify-content: flex-end;
+    }
+}
+
+.node__constant-emitter {
+    .node-body {
+        display: grid;
+        grid-template-columns: 1fr min-content;
+        flex-direction: column;
+        row-gap: 0.6rem;
+        column-gap: 0.4rem;
+
+        .node-input,
+        .node-select {
+            grid-column: 1;
+        }
+    }
+}
+
+.node__operator {
+    .node-body {
+        display: grid;
+        grid-template-columns: repeat(3, min-content);
+        justify-content: space-between;
+        width: 18rem;
+    }
+    
+    .operator-icon {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 3.8rem;
+        font-weight: 500;
+        color: #9A9A9A;
+    }
+
+    .operator-inputs {
+        margin-right: 0.8rem;
+    }
+
+    .operator-inputs,
+    .operator-outputs {
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+    }
+
+    .operator-inputs .connector-wrapper,
+    .operator-outputs .connector-wrapper {
+        gap: 0.3rem;
+    }
+
+    .operator-outputs span {
+        width: max-content;
     }
 }

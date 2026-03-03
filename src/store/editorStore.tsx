@@ -26,7 +26,8 @@ export const useEditorStore = create<{
 
   addNode: <T extends NodeTypes>(node: NodeData<T>) => void,
   removeNode: (nodeId: NodeId) => void,
-  updateNodePosition: (nodeId: NodeId, updater: EditorStateUpdater<ViewportParams, Vec2>) => void
+  updateNodePosition: (nodeId: NodeId, updater: EditorStateUpdater<ViewportParams, Vec2>) => void,
+  updateNodeData: (nodeId: NodeId, updater: EditorStateUpdater<NodeData<NodeTypes>["data"]>) => void,
 
   updateViewportParams: (updater: EditorStateUpdater<ViewportParams>) => void
 }>((set) => ({
@@ -41,20 +42,25 @@ export const useEditorStore = create<{
   connections: {},
 
   addNode<T extends NodeTypes>(node: NodeData<T>) {
-    set(prev => ({
-      graph: {
-        ...prev.graph,
-        [node.id]: {
-          inputs: [],
-          outputs: []
-        }
-      },
-      nodes: {
-        ...prev.nodes,
-        [node.id]: node
-      },
-      nodeIds: [ ...prev.nodeIds, node.id ]
-    }));
+
+    set(prev => {
+      if (Object.hasOwn(prev.nodes, node.id)) throw new Error("Node id's must be unique!");
+
+      return {
+        graph: {
+          ...prev.graph,
+          [node.id]: {
+            inputs: [],
+            outputs: []
+          }
+        },
+        nodes: {
+          ...prev.nodes,
+          [node.id]: node
+        },
+        nodeIds: [ ...prev.nodeIds, node.id ]
+      }
+    });
   }, 
 
   removeNode(nodeId: NodeId) {
@@ -144,6 +150,18 @@ export const useEditorStore = create<{
 
       return { connections, nodes }
     });
+  },
+
+  updateNodeData(nodeId: NodeId, updater: EditorStateUpdater<NodeData<NodeTypes>["data"]>) {
+    set((prev) => ({
+      nodes: {
+        ...prev.nodes,
+        [nodeId]: {
+          ...prev.nodes[nodeId],
+          data: updater(prev.nodes[nodeId].data)
+        }
+      }
+    }))
   },
 
   addConnection(data: ConnectionData) {
