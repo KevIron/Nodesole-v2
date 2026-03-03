@@ -31,13 +31,13 @@ function ConditionNode({ id }: NodeProps) {
           name="FLOW-OUT"
         />
         <Connector 
-          type="flow"
+          type="variable-flow"
           direction="output"
           name="THEN"
           description="Then"
         />
         <Connector 
-          type="flow"
+          type="variable-flow"
           direction="output"
           name="ELSE"
           description="Else"

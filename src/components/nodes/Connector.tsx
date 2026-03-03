@@ -104,7 +104,6 @@ function Connector({ type, direction, name, description }: ConnectorProps) {
       const connectorCenter = convertToViewportPos(getElementCenter(connectorSvg), viewportParams);
 
       const connectorType = direction === "input" ? "sourceConnector" : "targetConnector";
-      const inverseConnectorType = direction !== "input" ? "sourceConnector" : "targetConnector";
 
       // Check if the connectors are the same directions
       if (connector.dataset.connectorDirection === direction) {
@@ -120,10 +119,8 @@ function Connector({ type, direction, name, description }: ConnectorProps) {
           return;
         }
       }
-
-      const currentConnectionData = useEditorStore.getState().connections[drawnConnectionIdRef.current];
       
-      if (currentConnectionData[inverseConnectorType].nodeId === nodeId) {
+      if (connector.dataset.nodeId === nodeId) {
         removeConnection(drawnConnectionIdRef.current);
         return;
       }

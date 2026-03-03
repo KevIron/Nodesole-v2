@@ -27,5 +27,6 @@ function findExecutionOrder(graph: Graph, connections: connections, order: Array
 }
 
 function executeGraph(graph: Graph, nodes: Nodes, connections: connections) {
-    const 
+    const entryPoint = Object.values(nodes).find((el) => el.type === "ENTRY_NODE");
+    
 }

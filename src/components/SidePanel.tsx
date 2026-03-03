@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useEditorStore } from "../store/editorStore";
 import type { NodeData, NodeDataTypesMap, NodeTypes } from "../types/EditorTypes";
 import Vec2 from "../utils/Vec2";
 
 export default function SidePanel() {
   const addNode = useEditorStore((state) => state.addNode);
+  const removeNode = useEditorStore((state) => state.removeNode);
   const [operatorOperation, setOperatorOperation] = useState<NodeDataTypesMap["OPERATOR_NODE"]["operation"]>("equal");
 
   function handleAddNode<T extends NodeTypes>(data: NodeData<T>) {
@@ -14,6 +15,22 @@ export default function SidePanel() {
   // useEffect(() => {
   //   for (let i = 0; i < 5000; ++i) handleAddEndNode();
   // });
+
+  useEffect(() => {
+    const id = crypto.randomUUID();
+
+    addNode({
+      id: id,
+      type: "ENTRY_NODE",
+      data: {
+        pos: new Vec2(0, 0)
+      }
+    }) 
+
+    return () => {
+      removeNode(id);
+    }
+  })
 
   return (
     <aside id="side-panel">
