@@ -40,11 +40,16 @@ export type NodeProps = {
 type Connector = {
   nodeId: string | null,
   name: string | null,
+  direction: "input" | "output" | null,
+  type: ConnectionTypes | null
   pos: Vec2
 }
 
+export type ConnectionTypes = "data" | "flow" | "variable-flow"; 
+
 export type ConnectionData = {
   id: string,
+  type: ConnectionTypes,
   isVisible: boolean,
   sourceConnector: Connector,
   targetConnector: Connector,

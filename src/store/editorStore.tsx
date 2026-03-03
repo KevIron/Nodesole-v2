@@ -9,16 +9,21 @@ type EditorStateUpdater<T, K = T> = (prev: T) => K;
 type NodeId = string;
 type ConnectionId = string;
 
+export type Graph = Record<NodeId, { 
+    inputs: Array<ConnectionId>, 
+    outputs: Array<ConnectionId> 
+}>;
+
+export type Nodes = Record<string, NodeData<NodeTypes>>;
+export type connections = Record<string, ConnectionData>;
+
 export const useEditorStore = create<{
   viewportParams: ViewportParams,
 
-  graph: Record<NodeId, { 
-    inputs: Array<ConnectionId>, 
-    outputs: Array<ConnectionId> 
-  }>,
-  nodeIds: string[]
-  nodes: Record<string, NodeData<NodeTypes>>,
-  connections: Record<string, ConnectionData>,
+  graph: Graph,
+  nodeIds: string[],
+  nodes: Nodes,
+  connections: connections,
 
   addConnection: (data: ConnectionData) => void,
   removeConnection: (connId: ConnectionId) => void,

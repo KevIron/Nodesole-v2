@@ -10,9 +10,10 @@ import useViewportContext from "../../hooks/useViewportContext"
 
 import Vec2 from "../../utils/Vec2"
 import { getElementCenter } from "../../utils/Elements"
+import type { ConnectionTypes } from "../../types/EditorTypes"
 
 type ConnectorProps = {
-  type: "data" | "flow",
+  type: ConnectionTypes,
   direction: "input" | "output",
   name: string
   description?: string
@@ -48,11 +49,15 @@ function Connector({ type, direction, name, description }: ConnectorProps) {
       {
         nodeId: nodeId,
         name: name,
+        type: type,
+        direction: direction,
         pos: connectorCenter
       },
       {
         nodeId: null,
         name: null,
+        type: null,
+        direction: null,
         pos: connectorCenter
       },
     ]
@@ -61,6 +66,7 @@ function Connector({ type, direction, name, description }: ConnectorProps) {
     
     addConnection({
       id: connectionId,
+      type: type,
       isVisible: true,
       sourceConnector: connectors[0],
       targetConnector: connectors[1]
@@ -98,15 +104,40 @@ function Connector({ type, direction, name, description }: ConnectorProps) {
       const connectorCenter = convertToViewportPos(getElementCenter(connectorSvg), viewportParams);
 
       const connectorType = direction === "input" ? "sourceConnector" : "targetConnector";
+      const inverseConnectorType = direction !== "input" ? "sourceConnector" : "targetConnector";
 
-      updateConnection(drawnConnectionIdRef.current, (prev) => ({
-        ...prev,
-        [connectorType]: {
-          nodeId: connector.dataset.nodeId,
-          name: connector.dataset.connectorName,
-          pos: connectorCenter
+      // Check if the connectors are the same directions
+      if (connector.dataset.connectorDirection === direction) {
+        removeConnection(drawnConnectionIdRef.current);
+        return;
+      }
+
+      // Check if the connectors are of the same type, but treat variable-flow and flow as the same
+      if (connector.dataset.connectorType !== type) {
+        if (!((type === "variable-flow" && connector.dataset.connectorType === "flow") ||
+            (type === "flow" && connector.dataset.connectorType === "variable-flow"))) {
+          removeConnection(drawnConnectionIdRef.current);
+          return;
         }
-      }));
+      }
+
+      const currentConnectionData = useEditorStore.getState().connections[drawnConnectionIdRef.current];
+      
+      if (currentConnectionData[inverseConnectorType].nodeId === nodeId) {
+        removeConnection(drawnConnectionIdRef.current);
+        return;
+      }
+
+      updateConnection(drawnConnectionIdRef.current, (prev) => {
+        return {
+          ...prev,
+          [connectorType]: {
+            nodeId: connector.dataset.nodeId,
+            name: connector.dataset.connectorName,
+            pos: connectorCenter
+          }
+        }
+      });
     } else {
       removeConnection(drawnConnectionIdRef.current);
     }
@@ -125,6 +156,8 @@ function Connector({ type, direction, name, description }: ConnectorProps) {
     "data-node-id": nodeId,
     "data-connector-name": name,
     "data-connector-direction": direction,
+    "data-connector-type": type,
+    // "data-connector-data-type": dataType
   }
 
   const connectorStyle: React.CSSProperties = {
