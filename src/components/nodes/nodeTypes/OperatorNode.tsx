@@ -1,9 +1,11 @@
 import { memo } from "react";
-import type { NodeDataTypesMap, NodeProps } from "../../../types/EditorTypes";
-import MinimalNodeWrapper from "../nodeWrappers/MinimalNodeWrapper";
 import { NODE_COLORS } from "../../../utils/NodeColors";
 import { useEditorStore } from "../../../store/editorStore";
+
+import MinimalNodeWrapper from "../nodeWrappers/MinimalNodeWrapper";
 import Connector from "../Connector";
+
+import type { NodeDataTypesMap, NodeProps } from "../../../types/EditorTypes";
 
 function OperatorNode({ id }: NodeProps) {
   const nodeData = useEditorStore((state) => state.nodes[id].data) as NodeDataTypesMap["OPERATOR_NODE"];
