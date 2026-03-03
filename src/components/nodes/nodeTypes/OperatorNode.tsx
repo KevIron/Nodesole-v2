@@ -11,8 +11,10 @@ type OperatorNodeProps = NodeProps & {
 
 function OperatorNode({ id }: OperatorNodeProps) {
   const nodeData = useEditorStore((state) => state.nodes[id].data) as NodeDataTypesMap["OPERATOR_NODE"];
+
   let operatorSign = "";
-  
+  let fontFamily = "Fira Code, sans-serif";
+
   switch (nodeData.operation) {
     case "lessThan":
       operatorSign = "<";
@@ -22,6 +24,7 @@ function OperatorNode({ id }: OperatorNodeProps) {
       break;
     case "equal":
       operatorSign = "==";
+      fontFamily = "Fira Mono, sans-serif";
       break;
   }
 
@@ -45,7 +48,7 @@ function OperatorNode({ id }: OperatorNodeProps) {
           description="B"
         />
       </div>
-      <span className="operator-icon">
+      <span className="operator-icon" style={{ fontFamily }}>
         {operatorSign}
       </span>
       <div className="operator-outputs">
@@ -53,7 +56,7 @@ function OperatorNode({ id }: OperatorNodeProps) {
           type="data"
           direction="output"
           name="C"
-          description="C"          
+          description="->"          
         />
       </div>
     </MinimalNodeWrapper>

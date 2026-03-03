@@ -235,12 +235,21 @@
     .node-body {
         display: grid;
         grid-template-columns: repeat(3, min-content);
-        gap: 1.2rem;
-        align-items: center;
+        justify-content: space-between;
+        width: 18rem;
     }
     
     .operator-icon {
-        font-size: 3.2rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 3.8rem;
+        font-weight: 500;
+        color: #9A9A9A;
+    }
+
+    .operator-inputs {
+        margin-right: 0.8rem;
     }
 
     .operator-inputs,
@@ -248,5 +257,14 @@
         display: flex;
         flex-direction: column;
         gap: 0.8rem;
+    }
+
+    .operator-inputs .connector-wrapper,
+    .operator-outputs .connector-wrapper {
+        gap: 0.3rem;
+    }
+
+    .operator-outputs span {
+        width: max-content;
     }
 }
