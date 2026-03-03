@@ -11,11 +11,16 @@ type ConstantEmitterData = NodeDataBase & {
   value: string
 }
 
+type OperatorNodeData = NodeDataBase & {
+  operation: "lessThan" | "greaterThan" | "equal"
+}
+
 export type NodeDataTypesMap = {
   "ENTRY_NODE": NodeDataBase,
   "END_NODE": NodeDataBase,
   "CONDITION_NODE": NodeDataBase,
-  "CONSTANT_EMITTER_NODE": ConstantEmitterData
+  "CONSTANT_EMITTER_NODE": ConstantEmitterData,
+  "OPERATOR_NODE": OperatorNodeData
 }
 
 export type NodeTypes = keyof NodeDataTypesMap;

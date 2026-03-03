@@ -42,6 +42,7 @@
     align-items: center;
     justify-content: center;
     gap: 0.4rem;
+    color: var(--text-400);
 }
 
 .connector {
@@ -62,7 +63,7 @@
     display: flex;
     gap: 0.4rem;
     height: 3rem;
-    width: 24rem;
+    width: 20rem;
 }
 
 .node-input {
@@ -166,6 +167,10 @@
         align-items: center;
     }
 
+    .select-display span {
+        min-width: 0;
+    }
+
     .select-display svg {
         height: 2.4rem;
         aspect-ratio: 1 / 1;
@@ -217,11 +222,31 @@
         grid-template-columns: 1fr min-content;
         flex-direction: column;
         row-gap: 0.6rem;
-        column-gap: 0.2rem;
+        column-gap: 0.4rem;
 
         .node-input,
         .node-select {
             grid-column: 1;
         }
+    }
+}
+
+.node__operator {
+    .node-body {
+        display: grid;
+        grid-template-columns: repeat(3, min-content);
+        gap: 1.2rem;
+        align-items: center;
+    }
+    
+    .operator-icon {
+        font-size: 3.2rem;
+    }
+
+    .operator-inputs,
+    .operator-outputs {
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
     }
 }

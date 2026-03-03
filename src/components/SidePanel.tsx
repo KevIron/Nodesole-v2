@@ -1,9 +1,11 @@
+import { useState } from "react";
 import { useEditorStore } from "../store/editorStore";
-import type { NodeData, NodeTypes } from "../types/EditorTypes";
+import type { NodeData, NodeDataTypesMap, NodeTypes } from "../types/EditorTypes";
 import Vec2 from "../utils/Vec2";
 
 export default function SidePanel() {
   const addNode = useEditorStore((state) => state.addNode);
+  const [operatorOperation, setOperatorOperation] = useState<NodeDataTypesMap["OPERATOR_NODE"]["operation"]>("equal");
 
   function handleAddNode<T extends NodeTypes>(data: NodeData<T>) {
     addNode(data);
@@ -51,6 +53,23 @@ export default function SidePanel() {
         })}>
           Add emitter node
         </button>
+        <div className="operator-addition">
+          <button onClick={() => handleAddNode({
+            id: crypto.randomUUID(),
+            type: "OPERATOR_NODE",
+            data: {
+              pos: new Vec2(0, 0),
+              operation: operatorOperation
+            }
+          })}>
+            Add operator node
+          </button>
+          <select onChange={(e) => setOperatorOperation(e.target.value as NodeDataTypesMap["OPERATOR_NODE"]["operation"])} value={operatorOperation}>
+            <option value="equal">EQ</option>
+            <option value="greaterThan">GT</option>
+            <option value="lessThan">LT</option>
+          </select>
+        </div>
       </div>
     </aside>
   );

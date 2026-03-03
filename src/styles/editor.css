@@ -77,5 +77,14 @@
 
     button {
         padding: 0.4rem;
+        width: 100%;
+    }
+
+    div {
+        display: flex;
+    }
+
+    select {
+        padding: 0.4rem;
     }
 }
